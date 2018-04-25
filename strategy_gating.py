@@ -319,7 +319,8 @@ def strategy_gating(nbCh,gatingType):
     data.extend([[x for x in L if x is not None] for L\
      in izip_longest(range(1, nbTrials+1), trialDuration, bumps_list, [med], [fst_quartile], [thrd_quartile])])
     
-    with open('/home/viki/catkin_ws/src/navigation_strategies/'+gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'_'+str(int(startT)),'w') as f:
+    with open('/home/viki/catkin_ws/src/navigation_strategies/'+gatingType+'_a_'+str(alpha)+'_b_'+str(beta)\
+      +'_g_'+str(gamma)+'_'+str(int(startT))+'.csv','w') as f:
       csv.writer(f).writerows(data)
     
 
