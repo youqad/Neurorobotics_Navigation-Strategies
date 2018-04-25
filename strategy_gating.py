@@ -299,6 +299,12 @@ def strategy_gating(nbCh,gatingType):
     # Log files opening
     logDuration = open('DureesEssais_'+gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'_'+str(startT),'w')
 
+    def truncate(f):
+      return float(format(f, '.2f').rstrip('0').rstrip('.'))
+    truncate = np.vectorize(truncate)
+
+    trialDuration = truncate(trialDuration)
+
     for i in range(nbTrials):
       rospy.loginfo('T = '+str(trialDuration[i])+\
       ' / Nb bumps into wall: '+str(bumps_list[i]))
@@ -306,8 +312,8 @@ def strategy_gating(nbCh,gatingType):
     
     logDuration.close()
 
-    med = np.percentile(trialDuration, 50)
-    fst_quartile, thrd_quartile = np.percentile(trialDuration, 25), np.percentile(trialDuration, 75)
+    med = truncate(np.percentile(trialDuration, 50))
+    fst_quartile, thrd_quartile = truncate(np.percentile(trialDuration, 25)), truncate(np.percentile(trialDuration, 75))
 
     rospy.loginfo('Median: '+str(med)+'\n')
     rospy.loginfo('1st Quartile: '+str(fst_quartile)+'\n')
