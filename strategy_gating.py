@@ -12,6 +12,8 @@ import sys
 import numpy as np
 import time
 from collections import defaultdict
+from itertools import izip_longest
+import csv
 
 channel=[]
 lasers=LaserScan()
@@ -126,13 +128,15 @@ def strategy_gating(nbCh,gatingType):
     rospy.loginfo("Start time"+str(startT))
     
     trial = 0
-    nbTrials = 10
+    nbTrials = 3
     trialDuration = np.zeros((nbTrials))
 
     choice = -1
     rew = 0
     
     ts = 0
+    bumps = 0
+    bumps_list = np.zeros(nbTrials, dtype=int)-1  # number of bumps into a wall for each trial
     
     i2strat = ['wall follower','guidance']
 
@@ -176,10 +180,13 @@ def strategy_gating(nbCh,gatingType):
           # store information about the duration of the finishing trial:
           currT = rospy.get_time()
           trialDuration[trial] = currT - startT
+          bumps_list[trial] = bumps
           startT = currT
-          rospy.loginfo("Trial "+str(trial)+" duration:"+str(trialDuration[trial]))
+          rospy.loginfo("Trial "+str(trial)+" duration:"+str(trialDuration[trial])\
+          +" / Nb of bumps into wall: "+str(bumps))
           trial +=1
-          rew = 1 
+          bumps = 0
+          rew = 1
           odom.pose.pose.position.x = x
           odom.pose.pose.position.y = y
         except rospy.ServiceException, e:
@@ -189,6 +196,7 @@ def strategy_gating(nbCh,gatingType):
       #rospy.loginfo("BUMPERS "+str(bumper_r)+' '+str(bumper_l))
       if bumper_r or bumper_l:
         rew = -1
+        bumps += 1
         #rospy.loginfo("BING! A wall...")
 
       # 3) build the state, that will be used by learning, from the sensory data
@@ -275,7 +283,6 @@ def strategy_gating(nbCh,gatingType):
           Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
           rew = 0
         
-
         
       #------------------------------------------------
       else:
@@ -290,17 +297,31 @@ def strategy_gating(nbCh,gatingType):
       r.sleep()   
     
     # Log files opening
-    logDuration = open('DureesEssais_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'_'+str(startT),'w')
+    logDuration = open('DureesEssais_'+gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'_'+str(startT),'w')
 
     for i in range(nbTrials):
-      rospy.loginfo('T = '+str(trialDuration[i]))
+      rospy.loginfo('T = '+str(trialDuration[i])+\
+      ' / Nb bumps into wall: '+str(bumps_list[i]))
       logDuration.write(str(i)+' '+str(trialDuration[i])+'\n')
-      
-    rospy.loginfo('Median: '+str(np.percentile(trialDuration, 50))+'\n')
-    rospy.loginfo('1st quartile: '+str(np.percentile(trialDuration, 25))+'\n')
-    rospy.loginfo('3rd quartile: '+str(np.percentile(trialDuration, 75))+'\n')
     
     logDuration.close()
+
+    med = np.percentile(trialDuration, 50)
+    fst_quartile, thrd_quartile = np.percentile(trialDuration, 25), np.percentile(trialDuration, 75)
+
+    rospy.loginfo('Median: '+str(med)+'\n')
+    rospy.loginfo('1st Quartile: '+str(fst_quartile)+'\n')
+    rospy.loginfo('3rd Quartile: '+str(thrd_quartile)+'\n')
+
+    data = [['Trial', 'Duration', 'Number of bumps into walls',\
+    'Median', '1st Quartile', '3rd Quartile']]
+
+    data.extend([[x for x in L if x is not None] for L\
+     in izip_longest(range(1, nbTrials+1), trialDuration, bumps_list, [med], [fst_quartile], [thrd_quartile])])
+    
+    with open('/home/viki/catkin_ws/src/navigation_strategies/'+gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'_'+str(int(startT)),'w') as f:
+      csv.writer(f).writerows(data)
+    
 
 #-------------------------------------------
 if __name__ == '__main__':
