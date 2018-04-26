@@ -128,7 +128,7 @@ def strategy_gating(nbCh,gatingType):
     rospy.loginfo("Start time: "+str(startT))
     
     trial = 0
-    nbTrials = 3
+    nbTrials = 11
     trialDuration = np.zeros((nbTrials))
 
     choice = -1
@@ -251,7 +251,7 @@ def strategy_gating(nbCh,gatingType):
         if ts % totalNbSteps == 0:
           choice = random.randrange(nbCh)
         
-        rospy.loginfo("randomPersist: module actif: "+i2strat[choice])
+        rospy.loginfo("randomPersist (trial "+str(trial)+"): "+i2strat[choice])
         speed_l=channel[choice].speed_left
         speed_r=channel[choice].speed_right
     
@@ -277,7 +277,7 @@ def strategy_gating(nbCh,gatingType):
           if rew != 0:
             rew = 0
           choice = draw_proba(S_t)
-          rospy.loginfo("Q-learning: module actif: "+i2strat[choice])
+          rospy.loginfo("Q-learning (trial "+str(trial)+"): "+i2strat[choice])
           speed_l=channel[choice].speed_left
           speed_r=channel[choice].speed_right
         elif rew != 0:
@@ -340,10 +340,10 @@ def strategy_gating(nbCh,gatingType):
 
     if nbTrials > 10:
       med, fst_quartile, thrd_quartile = med_quartiles(trialDuration[:10])
-      data_stat.extend(['1 to 10', med, fst_quartile, thrd_quartile])
+      data_stat.append(['1 to 10', med, fst_quartile, thrd_quartile])
 
       med, fst_quartile, thrd_quartile = med_quartiles(trialDuration[-10:])
-      data_stat.extend([str(nbTrials-9)+' to '+str(nbTrials), med, fst_quartile, thrd_quartile])
+      data_stat.append([str(nbTrials-9)+' to '+str(nbTrials), med, fst_quartile, thrd_quartile])
     
     with open('/home/viki/catkin_ws/src/navigation_strategies/'+(str(int(startT))[3:])+'_Stats_'+\
       gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
