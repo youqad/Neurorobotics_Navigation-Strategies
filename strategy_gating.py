@@ -11,7 +11,7 @@ from sensor_msgs.msg import LaserScan
 import sys
 import numpy as np
 import time
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from itertools import izip_longest
 import csv
 
@@ -128,7 +128,7 @@ def strategy_gating(nbCh,gatingType):
     rospy.loginfo("Start time"+str(startT))
     
     trial = 0
-    nbTrials = 3
+    nbTrials = 30
     trialDuration = np.zeros((nbTrials))
 
     choice = -1
@@ -312,23 +312,52 @@ def strategy_gating(nbCh,gatingType):
     
     logDuration.close()
 
-    med = truncate(np.percentile(trialDuration, 50))
-    fst_quartile, thrd_quartile = truncate(np.percentile(trialDuration, 25)), truncate(np.percentile(trialDuration, 75))
+    def med_quartiles(durations):
+      med = truncate(np.percentile(durations, 50))
+      fst_quartile, thrd_quartile = truncate(np.percentile(durations, 25)), truncate(np.percentile(durations, 75))
+      return med, fst_quartile, thrd_quartile
+    
+    med, fst_quartile, thrd_quartile = med_quartiles(trialDuration)
 
     rospy.loginfo('Median: '+str(med)+'\n')
     rospy.loginfo('1st Quartile: '+str(fst_quartile)+'\n')
     rospy.loginfo('3rd Quartile: '+str(thrd_quartile)+'\n')
 
-    data = [['Trial', 'Duration', 'Number of bumps into walls',\
-    'Median', '1st Quartile', '3rd Quartile']]
+    # Saving (Trial, Duration, Nb of bumps, Median, Quartiles) in a log file
+    data = [['Trial', 'Duration', 'Number of bumps into walls']]
 
     data.extend([[x for x in L if x is not None] for L\
      in izip_longest(range(1, nbTrials+1), trialDuration, bumps_list, [med], [fst_quartile], [thrd_quartile])])
     
-    with open('/home/viki/catkin_ws/src/navigation_strategies/'+gatingType+'_a_'+str(alpha)+'_b_'+str(beta)\
-      +'_g_'+str(gamma)+'_'+str(int(startT))+'.csv','w') as f:
+    with open('/home/viki/catkin_ws/src/navigation_strategies/'+str(int(startT))[3:]+'_Trials_'+\
+      gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
       csv.writer(f).writerows(data)
+
+    # Saving Median and Quartiles in a log file
+    data_stat = [['Trials','Median', '1st Quartile', '3rd Quartile'],\
+    ['All', med, fst_quartile, thrd_quartile]]
+
+    if nbTrials > 10:
+      med, fst_quartile, thrd_quartile = med_quartiles(trialDuration[:10])
+      data_stat.extend(['1 to 10', med, fst_quartile, thrd_quartile])
+
+      med, fst_quartile, thrd_quartile = med_quartiles(trialDuration[-10:])
+      data_stat.extend([str(nbTrials-9)+' to '+str(nbTrials), med, fst_quartile, thrd_quartile])
     
+    with open('/home/viki/catkin_ws/src/navigation_strategies/'+str(int(startT))[3:]+'_Stats_'+\
+      +gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
+      csv.writer(f).writerows(data_stat)
+
+    if gatingType=='qlearning':
+      # Storing the Q-values at the end
+      keys = list(OrderedDict.fromkeys(['1110', '1117', '0000', '0007']+[state for state, _ in Q.keys()]))
+
+      with open('/home/viki/catkin_ws/src/navigation_strategies/'+str(int(startT))[3:]+'_Q-values_'+\
+        'nbTrials_'+str(nbTrials)+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
+        csv.writer(f).writerow(["State", "Wall follower", "Guidance"])
+        for key in keys:
+            csv.writer(f).writerow([key]+ [Q[(key, i)] for i in range(nbCh)])
+  
 
 #-------------------------------------------
 if __name__ == '__main__':
