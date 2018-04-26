@@ -125,10 +125,10 @@ def strategy_gating(nbCh,gatingType):
 
     # start time and timing related things
     startT = rospy.get_time()
-    rospy.loginfo("Start time"+str(startT))
+    rospy.loginfo("Start time: "+str(startT))
     
     trial = 0
-    nbTrials = 30
+    nbTrials = 3
     trialDuration = np.zeros((nbTrials))
 
     choice = -1
@@ -274,7 +274,8 @@ def strategy_gating(nbCh,gatingType):
 
         if ts % totalNbSteps == 0 or S_t != S_tm1:
           Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
-
+          if rew != 0:
+            rew = 0
           choice = draw_proba(S_t)
           rospy.loginfo("Q-learning: module actif: "+i2strat[choice])
           speed_l=channel[choice].speed_left
@@ -327,9 +328,9 @@ def strategy_gating(nbCh,gatingType):
     data = [['Trial', 'Duration', 'Number of bumps into walls']]
 
     data.extend([[x for x in L if x is not None] for L\
-     in izip_longest(range(1, nbTrials+1), trialDuration, bumps_list, [med], [fst_quartile], [thrd_quartile])])
+     in izip_longest(range(1, nbTrials+1), trialDuration, bumps_list)])
     
-    with open('/home/viki/catkin_ws/src/navigation_strategies/'+str(int(startT))[3:]+'_Trials_'+\
+    with open('/home/viki/catkin_ws/src/navigation_strategies/'+(str(int(startT))[3:])+'_Trials_'+\
       gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
       csv.writer(f).writerows(data)
 
@@ -344,15 +345,17 @@ def strategy_gating(nbCh,gatingType):
       med, fst_quartile, thrd_quartile = med_quartiles(trialDuration[-10:])
       data_stat.extend([str(nbTrials-9)+' to '+str(nbTrials), med, fst_quartile, thrd_quartile])
     
-    with open('/home/viki/catkin_ws/src/navigation_strategies/'+str(int(startT))[3:]+'_Stats_'+\
-      +gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
+    with open('/home/viki/catkin_ws/src/navigation_strategies/'+(str(int(startT))[3:])+'_Stats_'+\
+      gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
       csv.writer(f).writerows(data_stat)
 
     if gatingType=='qlearning':
       # Storing the Q-values at the end
-      keys = list(OrderedDict.fromkeys(['1110', '1117', '0000', '0007']+[state for state, _ in Q.keys()]))
+      keys = list(OrderedDict.fromkeys(['1110', '1117', '0000', '0007']+[state for state, _ in Q.keys() if state]))
+      rospy.loginfo('States: '+repr(keys)+'\n')
 
-      with open('/home/viki/catkin_ws/src/navigation_strategies/'+str(int(startT))[3:]+'_Q-values_'+\
+
+      with open('/home/viki/catkin_ws/src/navigation_strategies/'+(str(int(startT))[3:])+'_Q-values_'+\
         'nbTrials_'+str(nbTrials)+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
         csv.writer(f).writerow(["State", "Wall follower", "Guidance"])
         for key in keys:
