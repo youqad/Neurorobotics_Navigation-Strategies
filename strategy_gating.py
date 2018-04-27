@@ -194,7 +194,8 @@ def strategy_gating(nbCh,gatingType):
       if bumper_r or bumper_l:
         rew = -1
         bumps += 1
-        #rospy.loginfo("BING! A wall...")
+        rospy.loginfo("BING! A wall...")
+        rospy.loginfo("BUMPERS "+str(bumper_r)+' '+str(bumper_l))
 
       # 3) build the state, that will be used by learning, from the sensory data
       #rospy.loginfo("Nb laser scans="+str(len(lasers.ranges)))
@@ -271,15 +272,18 @@ def strategy_gating(nbCh,gatingType):
 
         if ts % totalNbSteps == 0 or S_t != S_tm1:
           Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
+          rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
           if rew != 0:
             rew = 0
           choice = draw_proba(Q, S_t)
-          rospy.loginfo("Q-learning (time: "+str(int(rospy.get_time()-startT))+"): trial "+str(trial)+" / "+i2strat[choice])
-          speed_l=channel[choice].speed_left
-          speed_r=channel[choice].speed_right
         elif rew != 0:
           Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
+          rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
           rew = 0
+        
+        rospy.loginfo("Q-learning (time: "+str(int(rospy.get_time()-startT))+"): trial "+str(trial)+" / "+i2strat[choice])
+        speed_l=channel[choice].speed_left
+        speed_r=channel[choice].speed_right
           
         
       #------------------------------------------------
