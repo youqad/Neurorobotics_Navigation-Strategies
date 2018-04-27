@@ -128,7 +128,7 @@ def strategy_gating(nbCh,gatingType):
     rospy.loginfo("Start time: "+str(startT))
     
     trial = 0
-    nbTrials = 11
+    nbTrials = 100
     trialDuration = np.zeros((nbTrials))
 
     choice = -1
@@ -140,7 +140,7 @@ def strategy_gating(nbCh,gatingType):
     
     i2strat = ['wall follower','guidance']
 
-    def draw_proba(S, beta=beta):
+    def draw_proba(Q, S, beta=beta):
       # draw an action according according
       # to the softmax policy
       r = np.random.random()
@@ -152,10 +152,7 @@ def strategy_gating(nbCh,gatingType):
 
       for i in range(nbCh+1):
           if cum_probas[i] < r <= cum_probas[i+1]:
-              draw = i
-              break
-
-      return draw
+              return i
 
     # Main loop:
     while (not rospy.is_shutdown()) and (trial <nbTrials):
@@ -276,14 +273,14 @@ def strategy_gating(nbCh,gatingType):
           Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
           if rew != 0:
             rew = 0
-          choice = draw_proba(S_t)
-          rospy.loginfo("Q-learning (trial "+str(trial)+"): "+i2strat[choice])
+          choice = draw_proba(Q, S_t)
+          rospy.loginfo("Q-learning (time: "+str(int(rospy.get_time()-startT))+"): trial "+str(trial)+" / "+i2strat[choice])
           speed_l=channel[choice].speed_left
           speed_r=channel[choice].speed_right
         elif rew != 0:
           Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
           rew = 0
-        
+          
         
       #------------------------------------------------
       else:
