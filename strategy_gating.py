@@ -366,7 +366,6 @@ def strategy_gating(nbCh,gatingType):
 
 #-------------------------------------------
 if __name__ == '__main__':
-
     nbch=int(sys.argv[1])
     gatingType=sys.argv[2]
     v=Channel()
