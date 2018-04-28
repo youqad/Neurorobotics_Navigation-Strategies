@@ -165,3 +165,7 @@ rew = 0
   speed_r=channel[choice].speed_right
 ```
 <img src="https://gyazo.com/b3ed317027c72fbd2d2052d22cb25384.gif" alt="1" style="width: 60%; margin-left: 20%;"/>
+<img src="https://gyazo.com/96d5c023e4d6bfe45c14fae02a94f3f6.gif" alt="2" style="width: 60%; margin-left: 20%;"/>
+<img src="https://gyazo.com/656bbbc108adad287280847734f0b098.gif" alt="3" style="width: 60%; margin-left: 20%;"/>
+<img src="https://gyazo.com/53fed15dd462cce1405ce43f00541db3.gif" alt="4" style="width: 60%; margin-left: 20%;"/>
+<img src="https://gyazo.com/1396f632e3799e692d9f5ee07ed4d164.gif" alt="5" style="width: 60%; margin-left: 20%;"/>
