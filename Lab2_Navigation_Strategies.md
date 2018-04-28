@@ -164,6 +164,7 @@ rew = 0
   speed_l=channel[choice].speed_left
   speed_r=channel[choice].speed_right
 ```
+(I inserted the gif here for future use)
 <img src="https://gyazo.com/b3ed317027c72fbd2d2052d22cb25384.gif" alt="1" style="width: 60%; margin-left: 20%;"/>
 <img src="https://gyazo.com/96d5c023e4d6bfe45c14fae02a94f3f6.gif" alt="2" style="width: 60%; margin-left: 20%;"/>
 <img src="https://gyazo.com/656bbbc108adad287280847734f0b098.gif" alt="3" style="width: 60%; margin-left: 20%;"/>
