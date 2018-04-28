@@ -128,7 +128,7 @@ def strategy_gating(nbCh,gatingType):
     rospy.loginfo("Start time: "+str(startT))
     
     trial = 0
-    nbTrials = 1000
+    nbTrials = 50
     trialDuration = np.zeros((nbTrials))
 
     choice = -1
@@ -154,7 +154,6 @@ def strategy_gating(nbCh,gatingType):
           if cum_probas[i] < r <= cum_probas[i+1]:
               return i
 
-    found_reward = False
     # Main loop:
     while (not rospy.is_shutdown()) and (trial <nbTrials):
       speed_l=0
@@ -166,8 +165,7 @@ def strategy_gating(nbCh,gatingType):
       dist2goal = math.sqrt((odom.pose.pose.position.x-goalx)**2+(odom.pose.pose.position.y-goaly)**2)
       #rospy.loginfo(dist2goal)
       # if so, teleport it:
-      if found_reward:
-        found_reward = False
+      if (dist2goal<30):
         rospy.wait_for_service('simu_fastsim/teleport')
         try:
           # teleport robot
@@ -181,19 +179,16 @@ def strategy_gating(nbCh,gatingType):
           trialDuration[trial] = currT - startT
           bumps_list[trial] = bumps
           startT = currT
-          rospy.loginfo("Trial "+str(trial)+" duration:"+str(trialDuration[trial])\
+          rospy.loginfo("Trial "+str(trial)+" duration: "+str(trialDuration[trial])\
           +" / Nb of bumps into wall: "+str(bumps))
           trial +=1
           bumps = 0
-          rew = 0
+          rew = 1
           odom.pose.pose.position.x = x
           odom.pose.pose.position.y = y
         except rospy.ServiceException, e:
           print "Service call failed: %s"%e
 
-      if (dist2goal<30):
-        rew = 1
-        found_reward = True
 
       # 2) has the robot bumped into a wall ?
       #rospy.loginfo("BUMPERS "+str(bumper_r)+' '+str(bumper_l))
