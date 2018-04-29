@@ -166,7 +166,7 @@ def strategy_gating(nbCh,gatingType):
       #rospy.loginfo(dist2goal)
       # if so, teleport it:
 
-      two_times_in_a_row = max(0, two_times_in_a_row-1) # to avoid having completing two trials in a row
+      two_times_in_a_row = max(0, two_times_in_a_row-1) # to avoid completing two trials in a row
 
       if (dist2goal<30) and (not two_times_in_a_row):
         two_times_in_a_row = 2
@@ -275,12 +275,18 @@ def strategy_gating(nbCh,gatingType):
         totalNbSteps = 2*frequency
 
         if ts % totalNbSteps == 0 or S_t != S_tm1:
+          # updating the Q-function
           Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
           rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
           if rew != 0:
+            # the non-zero reward has been taken into account when updating
+            # the Q-function, set it back to zero 
             rew = 0
+          
+          # new choice according to the softmax policy
           choice = draw_proba(Q, S_t)
         elif rew != 0:
+          # updating the Q-function
           Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
           rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
           rew = 0
