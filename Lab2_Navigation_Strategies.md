@@ -202,7 +202,7 @@ We have run 50 trials with the parameters $α = 0.4, β = 8, γ = 0.9$. The stat
 | 41 to 50  | 42.22  | 35.38  | 54.46  |
 | All  | 47.26  | 34.44  | 67,99  |
 
-The table above indicates an improvment in the last 10 trials comparing with the first 10 trials. Specifically, the median decreased from 69.54 sec (1 to 10 trails) to 42.22 sec (41 to 50 trials), the 1st quartile decreased from 54.63 sec to 35.38 sec, and the 3rd quartile decreased from 101.78 sec to 54.46 sec.
+The table above indicates an improvment in the last 10 trials comparing with the first 10 trials. Specifically, the median decreased 39% from 69.54 sec (1 to 10 trails) to 42.22 sec (41 to 50 trials), the 1st quartile decreased 35% from 54.63 sec to 35.38 sec, and the 3rd quartile decreased 46% from 101.78 sec to 54.46 sec.
 
 We have implenmented another 50 trials, though there was an increasement in the 1st quartile in the last 10 trials, the statistics shown below still indicated an improvement:
 
@@ -229,26 +229,56 @@ In our another 50 trials, similarly, the average bumps of the last 10 trials is 
 To obatain better accuracy, we implemented 100 trials with the default parameters for four more times. We have observed that:
 
 (1) For states `1110` and `1117`, as expected, when the goal is in front of the robot but is obstructed by the wall, the robot prefers the "wallFollower" strategy to bypass the wall and approach the goal.
-
 (2) However, for the states `0000` and `0007`in which the goal is directly in front of the robot without obstacle, we obtained results different to our expectation -- there is no obvious preference between "wallFollower" and "guidance" strategies and they even show a preference to the "wallFollower“ strategy somewhat which is not effective at all.
 
 
 We think that the second observation stated above might result from the reward issues: 
 
 (1) When the wall is in front of the robot but the robot has not detected the wall, if the robot uses "Guidance" strategy, it will bump into the wall receive penalty (reward = -1). This negative reward may be reinforced in the trails, and the robot has learned to not use "Guidance" strategy when the wall is not detected even it has already bypassed the wall. 
-
 (2) Moreover, the rebot does not receive any reward by choosing "Guidance" strategy when thre is no wall in front of it, because most of the time, there is still a long way for the robot to go to reach the reward, thus it is not positively reinforced to do so.
 
 
 To solve this problem, we think we can modify the reward rules in these ways:
 
 (1) A very effective improvement would be to correlated the rewards with distance between the robot and the goal. For example, the closer the robot is to the goal, the bigger the reward. Or if the robot get closer to the goal, it gets a positive reward; if it bumps into the wall, it gets a negative reward; if it is following the wall, it gets neither reward nor penalties. for instance) 
-
 (2) Another less effective way would be to make the reward bigger instead of saying that the trial ends when the robot's distance to the reward is less than 30, we could broaden the radius and specify 50 for instance.
 
 
 ### If you have the time, repeat the experiment with other values of the $α, β$ and $γ$ parameters to see how the learning speed is impacted.
+First, we test the impact of the parameter $α$ by comparing three different combanitions: (1) $α = 0.4, β = 8, γ = 0.9$; (2) $α = 0.6, β = 8, γ = 0.9$; (3) $α = 0.8, β = 8, γ = 0.9$.
 
+(1) Trial duration
+| $α$ | Median | 1st quartile  | 3rd quartile |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+| 0.4  | 69.54  | 54.63  | 101.78  |
+| 0.6  | 42.22  | 35.38  | 54.46  |
+| 0.8  | 47.26  | 34.44  | 67,99  |
+(Decreasement in percentage for median, 1st quartile and 3rd quartile of trial duration in the first 10 trials comparing with the last 10 trials)
+
+
+(2) Averae number of bumps-into-wall
+(i) first 10 trails:
+(ii) last 10 trials:
+
+Then, we test the impact of the parameter $β$ by comparing three different combanitions: (1) $α = 0.4, β = 0.1, γ = 0.9$; (2) $α = 0.4, β = 1, γ = 0.9$; (3) $α = 0.4, β = 8, γ = 0.9$.
+
+
+Finally, we test the impact of the parameter $γ$ by comparing three different combanitions: (1) $α = 0.4, β = 8, γ = 0.1$; (2) $α = 0.4, β = 8, γ = 0.5$; (3) $α = 0.4, β = 8, γ = 0.9$.
+
+$α$
+$α = 0.4, β = 8, γ = 0.9$
+$α = 0.6, β = 8, γ = 0.9$
+$α = 0.8, β = 8, γ = 0.9$
+
+$β$
+$α = 0.4, β = 0.1, γ = 0.9$
+$α = 0.4, β = 1, γ = 0.9$
+$α = 0.4, β = 8, γ = 0.9$
+
+$γ$
+$α = 0.4, β = 8, γ = 0.1$
+$α = 0.4, β = 8, γ = 0.5$
+$α = 0.4, β = 8, γ = 0.9$
 
 
 (I inserted the gif here for future use, same order as in Gyazo)
