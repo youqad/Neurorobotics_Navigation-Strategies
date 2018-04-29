@@ -192,6 +192,7 @@ rew = 0
 
 ## 4. Finally, you'll try to quantitatively evaluate how this algorithm works by running it on $30$ trials for instance (the more trials the better).
 
+
 ### Compute the median and quartiles over the first ten trials and the last ten ones: is there an improvement?
 We have run 50 trials with the parameters $α = 0.4, β = 8, γ = 0.9$. The statistics of the trial duration over the first 10 trials, last 10 trials and all 50 trials are reported in the following chart:
 
@@ -216,7 +217,7 @@ We have implenmented another 50 trials, though there was an increasement in the 
 The number of bumps into the wall decreased in the last 10 trials comparing with the first 10 trials. The average number of bumps in the first 10 trials is 4.2, and in the last 10 trials becomes 0.4. The statistics of the number of bumps are shown as below:
 
 | Trials  | Average | Median | 1st quartile  | 3rd quartile |
-| ------------- | ------------- | ------------- | ------------- |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
 | 1 to 10  | 4.2  | 3.5  | 1.25  | 7  |
 | 41 to 50  | 0.4  | 0  | 0  | 0  |
 | All  | 2.36  | 0  | 0  | 2.75  |
@@ -226,15 +227,23 @@ In our another 50 trials, similarly, the average bumps of the last 10 trials is 
 ### Even if there doesn't seem to be any improvement (which is likely, with so few trials), store the Q-values at the end and check if the learning goes as expected: look up the Q-values of the `1110`, `1117`, `0000` and `0007` states: what do you observe?
 
 To obatain better accuracy, we implemented 100 trials with the default parameters for four more times. We have observed that:
+
 (1) For states `1110` and `1117`, as expected, when the goal is in front of the robot but is obstructed by the wall, the robot prefers the "wallFollower" strategy to bypass the wall and approach the goal.
+
 (2) However, for the states `0000` and `0007`in which the goal is directly in front of the robot without obstacle, we obtained results different to our expectation -- there is no obvious preference between "wallFollower" and "guidance" strategies and they even show a preference to the "wallFollower“ strategy somewhat which is not effective at all.
 
+
 We think that the second observation stated above might result from the reward issues: 
+
 (1) When the wall is in front of the robot but the robot has not detected the wall, if the robot uses "Guidance" strategy, it will bump into the wall receive penalty (reward = -1). This negative reward may be reinforced in the trails, and the robot has learned to not use "Guidance" strategy when the wall is not detected even it has already bypassed the wall. 
+
 (2) Moreover, the rebot does not receive any reward by choosing "Guidance" strategy when thre is no wall in front of it, because most of the time, there is still a long way for the robot to go to reach the reward, thus it is not positively reinforced to do so.
 
+
 To solve this problem, we think we can modify the reward rules in these ways:
+
 (1) A very effective improvement would be to correlated the rewards with distance between the robot and the goal. For example, the closer the robot is to the goal, the bigger the reward. Or if the robot get closer to the goal, it gets a positive reward; if it bumps into the wall, it gets a negative reward; if it is following the wall, it gets neither reward nor penalties. for instance) 
+
 (2) Another less effective way would be to make the reward bigger instead of saying that the trial ends when the robot's distance to the reward is less than 30, we could broaden the radius and specify 50 for instance.
 
 
