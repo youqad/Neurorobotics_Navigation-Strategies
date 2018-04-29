@@ -115,7 +115,7 @@ def strategy_gating(nbCh,gatingType):
     # Q-learning related stuff
     # Algorithm parameters
     alpha = 0.4
-    beta = 8
+    beta = 1
     gamma = 0.9
 
     # definition of states at time t and t-1
@@ -128,7 +128,7 @@ def strategy_gating(nbCh,gatingType):
     rospy.loginfo("Start time: "+str(startT))
     
     trial = 0
-    nbTrials = 50
+    nbTrials = 30
     trialDuration = np.zeros((nbTrials))
 
     choice = -1
@@ -153,7 +153,7 @@ def strategy_gating(nbCh,gatingType):
       for i in range(nbCh+1):
           if cum_probas[i] < r <= cum_probas[i+1]:
               return i
-
+    two_times_in_a_row = 0
     # Main loop:
     while (not rospy.is_shutdown()) and (trial <nbTrials):
       speed_l=0
@@ -165,7 +165,11 @@ def strategy_gating(nbCh,gatingType):
       dist2goal = math.sqrt((odom.pose.pose.position.x-goalx)**2+(odom.pose.pose.position.y-goaly)**2)
       #rospy.loginfo(dist2goal)
       # if so, teleport it:
-      if (dist2goal<30):
+
+      two_times_in_a_row = max(0, two_times_in_a_row-1) # to avoid having completing two trials in a row
+
+      if (dist2goal<30) and (not two_times_in_a_row):
+        two_times_in_a_row = 2
         rospy.wait_for_service('simu_fastsim/teleport')
         try:
           # teleport robot
@@ -188,8 +192,7 @@ def strategy_gating(nbCh,gatingType):
           odom.pose.pose.position.y = y
         except rospy.ServiceException, e:
           print "Service call failed: %s"%e
-
-
+      
       # 2) has the robot bumped into a wall ?
       #rospy.loginfo("BUMPERS "+str(bumper_r)+' '+str(bumper_l))
       if bumper_r or bumper_l:
