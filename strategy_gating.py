@@ -114,9 +114,9 @@ def strategy_gating(nbCh,gatingType):
 
     # Q-learning related stuff
     # Algorithm parameters
-    alpha = 0.4
+    alpha = 0.9
     beta = 8
-    gamma = 0.5
+    gamma = 1
 
     # definition of states at time t and t-1
     S_t = ''
