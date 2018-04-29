@@ -116,7 +116,13 @@ You are asked to run the algorithm on a hybrid synchronous-asynchronous mode, th
 
 
 ### Compute the median and quartiles over the first ten trials and the last ten ones: is there an improvement?
+We have run 50 trials with the parameters $α = 0.4, β = 8, γ = 0.9$. The statistics of the trial duration over the first 10 trials, last 10 trials and all 50 trials are indicated in the following chart:
 
+| Trials  | Median | 1st quartile  | 3rd quartile |
+| ------------- | ------------- | ------------- | ------------- |
+| 1 to 10  | 70.23  | 37.73  | 118.3  |
+| 41 to 50  | 64.03  | 46.35  | 70.29  |
+| All  | 44.91  | 37.01  | 69.27  |
 
 ### Do the number of bumps into a wall decrease?
 
