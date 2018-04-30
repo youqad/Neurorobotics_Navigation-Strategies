@@ -24,40 +24,54 @@ abstract: 'Lab 2: Navigation Strategies'
 
 ### Kexin Ren & Younesse Kaddar (**Lecturers**: Alexandre Coninx & Benoît Girard)
 
+Let us consider a radar-equipped robot moving in an environment formed by a square field containing obstacles (U-shaped walls that would trap a robot going straight on) and a goal the robot is to reach. We resort to the reinforcement learning framework: the robot receives
 
-Summary of the problem (do we need this part?)
+- a negative reward (of $-1$) when bumping into a wall
+- a positive reward (of $1$) when reaching the goal
 
-Questions
+The aim is to coordinate two different navigation strategies so that the robot reaches the goal in the most straightforward manner possible:
+
+- the `wallFollower` stategy: the robot follows the nearest walls
+- the `guidance` strategy: the robot directly heads to the goals, no matter the obstacles there might be in way
+
+
+# Questions
 
 
 ## 1. Notice that the `random` policy is very unlikely to get the robot out the dead-end region of the map. In a first phase, write a policy called `randomPersist`, where one the two strategies is uniformly drawn at random is left unchanged for 2 seconds (instead of changing at each time step). This increased stability should enable the robot to have an actual chance of getting out of the dead-end.
 
-Since a choice is made every $2$ seconds, we first define a `ts` variable as the current number of steps:
-`ts = 0`
+Since a choice is made every $2$ seconds, we first define a `ts` variable couting the number of time steps. The length of a time step depends on the frequency
 
-Besides, we also define the total number of steps within $2$ seconds as `totalNbSteps`:
+```python
+frequency = 10 # 10hz
+r = rospy.Rate(frequency)
+```
+
+is so far as the main `while` loop is paused `1/frequency` at each iteration with the `r.sleep()` method.
+
+Thus the total number of steps within $2$ seconds is:
 
 ```python
 totalNbSteps = 2*frequency
 ```
 
-Then, the `randomPersist` function is defined as follows:
+as a result of which we can define the `randomPersist` function as follows:
 
 ```python
 elif gatingType=='randomPersist':
-# a choice is made every 2 seconds
-totalNbSteps = 2*frequency
-if ts % totalNbSteps == 0:
-  choice = random.randrange(nbCh)
+    # a choice is made every 2 seconds
+    totalNbSteps = 2*frequency
+    if ts % totalNbSteps == 0:
+        choice = random.randrange(nbCh)
 
-rospy.loginfo("randomPersist (trial "+str(trial)+"): "+i2strat[choice])
-speed_l=channel[choice].speed_left
-speed_r=channel[choice].speed_right
+    rospy.loginfo("randomPersist (trial "+str(trial)+"): "+i2strat[choice])
+    speed_l=channel[choice].speed_left
+    speed_r=channel[choice].speed_right
 ```
 
 ## Execute 10 trials with this new strategy and save each trial duration (to reach the goal). Compute the median, the first and the third quartiles.
 
-We use the following code to calculate and print the median, 1st quartile and 3rd quartile of the data:
+We use the following code to calculate and print the median, 1st quartile and 3rd quartile of the trial durations:
 
 ```python
 def med_quartiles(durations):
@@ -67,12 +81,35 @@ def med_quartiles(durations):
 
     med, fst_quartile, thrd_quartile = med_quartiles(trialDuration)
 
-    rospy.loginfo('Median: '+str(med)+'\n')
-    rospy.loginfo('1st Quartile: '+str(fst_quartile)+'\n')
-    rospy.loginfo('3rd Quartile: '+str(thrd_quartile)+'\n')
+rospy.loginfo('Median: '+str(med)+'\n')
+rospy.loginfo('1st Quartile: '+str(fst_quartile)+'\n')
+rospy.loginfo('3rd Quartile: '+str(thrd_quartile)+'\n')
 ```
 
-After running 10 trials with randomPersist strategy, we obtained the following statistical results:
+We can then save them in a `.csv` file, for convenience:
+
+```python
+import csv
+
+# [...]
+
+# Saving Median and Quartiles in a log file
+    data_stat = [['Trials','Median', '1st Quartile', '3rd Quartile'],\
+    ['All', med, fst_quartile, thrd_quartile]]
+
+    if nbTrials > 10:
+        med, fst_quartile, thrd_quartile = med_quartiles(trialDuration[:10])
+        data_stat.append(['1 to 10', med, fst_quartile, thrd_quartile])
+
+        med, fst_quartile, thrd_quartile = med_quartiles(trialDuration[-10:])
+        data_stat.append([str(nbTrials-9)+' to '+str(nbTrials), med, fst_quartile, thrd_quartile])
+
+    with open('/home/viki/catkin_ws/src/navigation_strategies/'+(str(int(startT))[3:])+'_Stats_'+\
+      gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
+        csv.writer(f).writerows(data_stat)
+```
+
+After running $10$ trials with the `randomPersist` strategy, we obtain the following results:
 
 ```
 Median of the trial duration:
@@ -111,7 +148,10 @@ You are asked to run the algorithm on a hybrid synchronous-asynchronous mode, th
 
     - either when an action has just been chosen
     - or when the robot has just received a non-zero reward (bump into a wall or goal reached).
-Similar as in Q1, we involved totalNbSteps and ts variables in the qlearning function. And according to the Q Learning formulas given in the handout, we define the Q value as:
+
+_________
+
+Similarly to what we did in *question 1*, we involved totalNbSteps and ts variables in the qlearning function. And according to the Q Learning formulas given in the handout, we define the Q value as:
 
 ```python
 Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)]);
@@ -241,16 +281,16 @@ To obatain better accuracy, we implemented 100 trials with the default parameter
 (2) However, for the states `0000` and `0007`in which the goal is directly in front of the robot without obstacle, we obtained results different to our expectation -- there is no obvious preference between "wallFollower" and "guidance" strategies and they even show a preference to the "wallFollower“ strategy somewhat which is not effective at all.
 
 
-We think that the second observation stated above might result from the reward issues: 
+We think that the second observation stated above might result from the reward issues:
 
-(1) When the wall is in front of the robot but the robot has not detected the wall, if the robot uses "Guidance" strategy, it will bump into the wall receive penalty (reward = $-1$). This negative reward may be reinforced in the trails, and the robot has learned to not use "Guidance" strategy when the wall is not detected even it has already bypassed the wall. 
+(1) When the wall is in front of the robot but the robot has not detected the wall, if the robot uses "Guidance" strategy, it will bump into the wall receive penalty (reward = $-1$). This negative reward may be reinforced in the trails, and the robot has learned to not use "Guidance" strategy when the wall is not detected even it has already bypassed the wall.
 
 (2) Moreover, the rebot does not receive any reward by choosing "Guidance" strategy when thre is no wall in front of it, because most of the time, there is still a long way for the robot to go to reach the reward, thus it is not positively reinforced to do so.
 
 
 To solve this problem, we think we can modify the reward rules in these ways:
 
-(1) A very effective improvement would be to correlated the rewards with distance between the robot and the goal. For example, the closer the robot is to the goal, the bigger the reward. Or if the robot get closer to the goal, it gets a positive reward; if it bumps into the wall, it gets a negative reward; if it is following the wall, it gets neither reward nor penalties. for instance) 
+(1) A very effective improvement would be to correlated the rewards with distance between the robot and the goal. For example, the closer the robot is to the goal, the bigger the reward. Or if the robot get closer to the goal, it gets a positive reward; if it bumps into the wall, it gets a negative reward; if it is following the wall, it gets neither reward nor penalties. for instance)
 
 (2) Another less effective way would be to make the reward bigger instead of saying that the trial ends when the robot's distance to the reward is less than $30$, we could broaden the radius and specify $50$ for instance.
 
@@ -262,10 +302,10 @@ We have repeated the experiments using three different values for each parameter
 
 ####  $α$ Test
 
-First, we test the impact of the parameter $α$ by comparing three different combanitions: 
+First, we test the impact of the parameter $α$ by comparing three different combanitions:
 
-(1) $α = 0.4, β = 8, γ = 0.9$; 
-(2) $α = 0.6, β = 8, γ = 0.9$; 
+(1) $α = 0.4, β = 8, γ = 0.9$;
+(2) $α = 0.6, β = 8, γ = 0.9$;
 (3) $α = 0.8, β = 8, γ = 0.9$.
 
 
@@ -281,21 +321,21 @@ The boxplots of the trial duration and number of bump-into-wall are shown below:
 The average is summarized in the chart below:
 
 
-| Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  | 
+| Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  |
 | ------------------------------- | ------------------- | --------------------- |
-| $α = 0.4 (β = 8, γ = 0.9)$  | $56.03$  | $3.40$ | 
-| $α = 0.6 (β = 8, γ = 0.9)$  | $52.36$  | $2.60$  | 
-| $α = 0.8 (β = 8, γ = 0.9)$  | $58.01$  | $1.97$  | 
+| $α = 0.4 (β = 8, γ = 0.9)$  | $56.03$  | $3.40$ |
+| $α = 0.6 (β = 8, γ = 0.9)$  | $52.36$  | $2.60$  |
+| $α = 0.8 (β = 8, γ = 0.9)$  | $58.01$  | $1.97$  |
 
 
-We observe that as $α$ increases, the trial duration over the 30 trials is mores stable (as shown in the plot, the data stretch across a smaller range), and the number of bumps decreases. This is because $α$ is the learning rate, and the bigger $α$ is, the quicker the robot learns. In this case, with bigger $α$, the robot's learning depends more on previous trials, and thus make the trial duration over 30 trials more stable/concentrated. 
+We observe that as $α$ increases, the trial duration over the 30 trials is mores stable (as shown in the plot, the data stretch across a smaller range), and the number of bumps decreases. This is because $α$ is the learning rate, and the bigger $α$ is, the quicker the robot learns. In this case, with bigger $α$, the robot's learning depends more on previous trials, and thus make the trial duration over 30 trials more stable/concentrated.
 
 ####  $β$ Test
 
-Then, we test the impact of the parameter $β$ by comparing three different combanitions: 
+Then, we test the impact of the parameter $β$ by comparing three different combanitions:
 
-(1) $α = 0.4, β = 0.1, γ = 0.9$; 
-(2) $α = 0.4, β = 1, γ = 0.9$; 
+(1) $α = 0.4, β = 0.1, γ = 0.9$;
+(2) $α = 0.4, β = 1, γ = 0.9$;
 (3) $α = 0.4, β = 8, γ = 0.9$.
 
 
@@ -311,21 +351,21 @@ The boxplots of the trial duration and number of bump-into-wall are shown below:
 The average is summarized in the chart below:
 
 
-| Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  | 
+| Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  |
 | ------------------------------- | ------------------- | --------------------- |
 | $β = 0.1 (α = 0.4, γ = 0.9)$  | $56.57$  | $8.53$  |
-| $β = 1 (α = 0.4, γ = 0.9)$  | $73.23$  | $12.90$  | 
-| $β = 8 (α = 0.4, γ = 0.9)$  | $56.03$  | $3.40$  | 
+| $β = 1 (α = 0.4, γ = 0.9)$  | $73.23$  | $12.90$  |
+| $β = 8 (α = 0.4, γ = 0.9)$  | $56.03$  | $3.40$  |
 
 
 We observe that as $β$ increases, .... This is because, $β$ is an exploration-exploitation trade-off parameter: for $β$ ≥ 0, the bigger $β$ is, the more the robot tends to exploit the seemingly most effective choice; the lower $β$ is, the more the robot tends to explore the choices.
 
 ####  $γ$ Test
 
-Finally, we test the impact of the parameter $γ$ by comparing three different combanitions: 
+Finally, we test the impact of the parameter $γ$ by comparing three different combanitions:
 
-(1) $α = 0.4, β = 8, γ = 0.1$; 
-(2) $α = 0.4, β = 8, γ = 0.5$; 
+(1) $α = 0.4, β = 8, γ = 0.1$;
+(2) $α = 0.4, β = 8, γ = 0.5$;
 (3) $α = 0.4, β = 8, γ = 0.9$.
 
 The boxplots of the trial duration and number of bump-into-wall are shown below:
@@ -337,10 +377,10 @@ The boxplots of the trial duration and number of bump-into-wall are shown below:
 
 The average is summarized in the chart below:
 
-| Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  | 
+| Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  |
 | ------------------------------- | ------------------- | --------------------- |
-| $γ = 0.1 (α = 0.4, β = 8)$  | $145.91$  | $9.8$  | 
-| $γ = 0.5 (α = 0.4, β = 8)$  | $65.15$  | $5.4$  | 
+| $γ = 0.1 (α = 0.4, β = 8)$  | $145.91$  | $9.8$  |
+| $γ = 0.5 (α = 0.4, β = 8)$  | $65.15$  | $5.4$  |
 | $γ = 0.9 (α = 0.4, β = 8)$  | $56.07$  | $3.4$  | 	
 
 

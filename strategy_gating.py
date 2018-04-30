@@ -116,7 +116,7 @@ def strategy_gating(nbCh,gatingType):
     # Algorithm parameters
     alpha = 0.9
     beta = 8
-    gamma = 1
+    gamma = 0.9
 
     # definition of states at time t and t-1
     S_t = ''
@@ -128,7 +128,7 @@ def strategy_gating(nbCh,gatingType):
     rospy.loginfo("Start time: "+str(startT))
     
     trial = 0
-    nbTrials = 30
+    nbTrials = 10
     trialDuration = np.zeros((nbTrials))
 
     choice = -1
@@ -306,7 +306,7 @@ def strategy_gating(nbCh,gatingType):
 
       pub_l.publish(speed_l)
       pub_r.publish(speed_r)
-      r.sleep()   
+      r.sleep()
     
     # Log files opening
     logDuration = open('DureesEssais_'+gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'_'+str(startT),'w')
