@@ -265,11 +265,16 @@ Then, we test the impact of the parameter $β$ by comparing three different comb
 (2) $α = 0.4, β = 1, γ = 0.9$; 
 (3) $α = 0.4, β = 8, γ = 0.9$.
 
+
 The boxplots of the trial duration and number of bump-into-wall are shown below:
+
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/2.png" alt="TrialDuration vs. Beta" style="width: 60%; margin-left: 20%;"/>
+
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/5.png" alt="NumberofBumps vs. Beta" style="width: 60%; margin-left: 20%;"/>
 
+
 We observe that as $β$ increases, ....
+
 
 Finally, we test the impact of the parameter $γ$ by comparing three different combanitions: 
 
@@ -278,12 +283,16 @@ Finally, we test the impact of the parameter $γ$ by comparing three different c
 (3) $α = 0.4, β = 8, γ = 0.9$.
 
 The boxplots of the trial duration and number of bump-into-wall are shown below:
+
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/3.png" alt="TrialDuration vs. Gamma" style="width: 60%; margin-left: 20%;"/>
+
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/6.png" alt="NumberofBumps vs. Gamma" style="width: 60%; margin-left: 20%;"/>
+
 
 We observe that as $γ$ increases, ....
 
 The average of the trial time for those different parameter combinations is shown in the following chart:
+
 | Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  | 
 | ------------------------------- | ------------------- | --------------------- |
 | $α = 0.4 (β = 8, γ = 0.9)$  | 56.03  | 3.40 | 
@@ -295,6 +304,7 @@ The average of the trial time for those different parameter combinations is show
 | $γ = 0.1 (α = 0.4, β = 8)$  | 145.91  | 9.8  | 
 | $γ = 0.5 (α = 0.4, β = 8)$  | 65.15  | 5.4  | 
 | $γ = 0.9 (α = 0.4, β = 8)$  | 56.07  | 3.4  | 	
+
 
 Remarks on the meaning of the parameters...
 
