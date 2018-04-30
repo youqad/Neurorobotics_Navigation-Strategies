@@ -254,10 +254,11 @@ First, we test the impact of the parameter $α$ by comparing three different com
 (3) $α = 0.8, β = 8, γ = 0.9$.
 
 The boxplots of the trial duration and number of bump-into-wall are shown below:
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/1.png" alt="TrialDuration vs. Alpha" style="width: 60%; margin-left: 20%;"/>
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/4.png" alt="NumberofBumps vs. Alpha" style="width: 60%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/1.png" alt="TrialDuration vs. Alpha" style="width: 40%; margin-left: 20%;"/>
 
-We observe that as $α$ increases, ....
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/4.png" alt="NumberofBumps vs. Alpha" style="width: 40%; margin-left: 20%;"/>
+
+We observe that as $α$ increases, the trial duration over the 30 trials is mores stable (as shown in the plot, the data stretch across a smaller range), and the number of bumps decreases. This is because $α$ is the learning rate, and the bigger $α$ is, the quicker the robot learns. In this case, with bigger $α$, the robot's learning depends more on previous trials, and thus make the trial duration over 30 trials more stable/concentrated. 
 
 Then, we test the impact of the parameter $β$ by comparing three different combanitions: 
 
