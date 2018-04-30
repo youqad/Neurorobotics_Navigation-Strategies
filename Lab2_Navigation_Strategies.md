@@ -254,9 +254,10 @@ First, we test the impact of the parameter $α$ by comparing three different com
 (3) $α = 0.8, β = 8, γ = 0.9$.
 
 The boxplots of the trial duration and number of bump-into-wall are shown below:
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/1.png" alt="TrialDuration vs. Alpha" style="width: 40%; margin-left: 20%;"/>
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/4.png" alt="NumberofBumps vs. Alpha" style="width: 40%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/1.png" alt="TrialDuration vs. Alpha" style="width: 30%; margin-left: 20%;"/>
+
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/4.png" alt="NumberofBumps vs. Alpha" style="width: 30%; margin-left: 20%;"/>
 
 We observe that as $α$ increases, the trial duration over the 30 trials is mores stable (as shown in the plot, the data stretch across a smaller range), and the number of bumps decreases. This is because $α$ is the learning rate, and the bigger $α$ is, the quicker the robot learns. In this case, with bigger $α$, the robot's learning depends more on previous trials, and thus make the trial duration over 30 trials more stable/concentrated. 
 
@@ -269,12 +270,14 @@ Then, we test the impact of the parameter $β$ by comparing three different comb
 
 The boxplots of the trial duration and number of bump-into-wall are shown below:
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/2.png" alt="TrialDuration vs. Beta" style="width: 60%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/2.png" alt="TrialDuration vs. Beta" style="width: 30%; margin-left: 20%;"/>
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/5.png" alt="NumberofBumps vs. Beta" style="width: 60%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/5.png" alt="NumberofBumps vs. Beta" style="width: 30%; margin-left: 20%;"/>
 
 
 We observe that as $β$ increases, ....
+
+For $β$ ≥ 0, the bigger $β$ is, the more the robot tends to exploit the seemingly most effective choice; the lower $β$ is, the more the robot tends to explore the choices.
 
 
 Finally, we test the impact of the parameter $γ$ by comparing three different combanitions: 
@@ -291,6 +294,8 @@ The boxplots of the trial duration and number of bump-into-wall are shown below:
 
 
 We observe that as $γ$ increases, ....
+
+$γ$ determines a tradeoff between exploration (exploring farther states) and exploitation/greediness (exploiting the rewards of the nearby one). As it happens: the smaller the parameter γ, the more the robot tends to exploit the closest state associated with a (strictly) positive reward (even if there might be a state farther on which a given action leads to a bigger reward).
 
 The average of the trial time for those different parameter combinations is shown in the following chart:
 
