@@ -196,15 +196,19 @@ rew = 0
 ### Compute the median and quartiles over the first ten trials and the last ten ones: is there an improvement?
 We have run 50 trials with the parameters $α = 0.4, β = 8, γ = 0.9$. The statistics of the trial duration over the first 10 trials, last 10 trials and all 50 trials are reported in the following chart:
 
+
 | Trials  | Median | 1st quartile  | 3rd quartile |
 | ------------- | ------------- | ------------- | ------------- |
 | 1 to 10  | 69.54  | 54.63  | 101.78  |
 | 41 to 50  | 42.22  | 35.38  | 54.46  |
 | All  | 47.26  | 34.44  | 67,99  |
 
+
 The table above indicates an improvment in the last 10 trials comparing with the first 10 trials. Specifically, the median decreased 39% from 69.54 sec (1 to 10 trails) to 42.22 sec (41 to 50 trials), the 1st quartile decreased 35% from 54.63 sec to 35.38 sec, and the 3rd quartile decreased 46% from 101.78 sec to 54.46 sec.
 
+
 We have implenmented another 50 trials, though there was an increasement in the 1st quartile in the last 10 trials, the statistics shown below still indicated an improvement:
+
 
 | Trials  | Median | 1st quartile  | 3rd quartile |
 | ------------- | ------------- | ------------- | ------------- |
@@ -212,9 +216,11 @@ We have implenmented another 50 trials, though there was an increasement in the 
 | 41 to 50  | 64.03  | 46.35  | 70.29  |
 | All  | 44.91  | 37.01  | 69.27  |
 
+
 ### Do the number of bumps into a wall decrease?
 
 The number of bumps into the wall decreased in the last 10 trials comparing with the first 10 trials. The average number of bumps in the first 10 trials is 4.2, and in the last 10 trials becomes 0.4. The statistics of the number of bumps are shown as below:
+
 
 | Trials  | Average | Median | 1st quartile  | 3rd quartile |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
@@ -222,9 +228,12 @@ The number of bumps into the wall decreased in the last 10 trials comparing with
 | 41 to 50  | 0.4  | 0  | 0  | 0  |
 | All  | 2.36  | 0  | 0  | 2.75  |
 
+
 In our another 50 trials, similarly, the average bumps of the last 10 trials is 0.5, much lower than the that of the first 10 trials which is 5.4.
 
+
 ### Even if there doesn't seem to be any improvement (which is likely, with so few trials), store the Q-values at the end and check if the learning goes as expected: look up the Q-values of the `1110`, `1117`, `0000` and `0007` states: what do you observe?
+
 
 To obatain better accuracy, we implemented 100 trials with the default parameters for four more times. We have observed that:
 
@@ -245,7 +254,11 @@ To solve this problem, we think we can modify the reward rules in these ways:
 
 
 ### If you have the time, repeat the experiment with other values of the $α, β$ and $γ$ parameters to see how the learning speed is impacted.
+
+
 We have repeated the experiments using 3 different values for each parameter $α, β$ and $γ$, and each experiment included 30 trials.
+
+####  $α$ Test
 
 First, we test the impact of the parameter $α$ by comparing three different combanitions: 
 
@@ -253,14 +266,18 @@ First, we test the impact of the parameter $α$ by comparing three different com
 (2) $α = 0.6, β = 8, γ = 0.9$; 
 (3) $α = 0.8, β = 8, γ = 0.9$.
 
+
 The boxplots of the trial duration and number of bump-into-wall are shown below:
 
+
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/1.png" alt="TrialDuration vs. Alpha" style="width: 30%; margin-left: 20%;"/>
+
 
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/4.png" alt="NumberofBumps vs. Alpha" style="width: 30%; margin-left: 20%;"/>
 
 
 The average is summarized in the chart below:
+
 
 | Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  | 
 | ------------------------------- | ------------------- | --------------------- |
@@ -271,6 +288,8 @@ The average is summarized in the chart below:
 
 We observe that as $α$ increases, the trial duration over the 30 trials is mores stable (as shown in the plot, the data stretch across a smaller range), and the number of bumps decreases. This is because $α$ is the learning rate, and the bigger $α$ is, the quicker the robot learns. In this case, with bigger $α$, the robot's learning depends more on previous trials, and thus make the trial duration over 30 trials more stable/concentrated. 
 
+####  $β$ Test
+
 Then, we test the impact of the parameter $β$ by comparing three different combanitions: 
 
 (1) $α = 0.4, β = 0.1, γ = 0.9$; 
@@ -280,12 +299,15 @@ Then, we test the impact of the parameter $β$ by comparing three different comb
 
 The boxplots of the trial duration and number of bump-into-wall are shown below:
 
+
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/2.png" alt="TrialDuration vs. Beta" style="width: 30%; margin-left: 20%;"/>
+
 
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/5.png" alt="NumberofBumps vs. Beta" style="width: 30%; margin-left: 20%;"/>
 
 
 The average is summarized in the chart below:
+
 
 | Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  | 
 | ------------------------------- | ------------------- | --------------------- |
@@ -294,10 +316,9 @@ The average is summarized in the chart below:
 | $β = 8 (α = 0.4, γ = 0.9)$  | 56.03  | 3.40  | 
 
 
-We observe that as $β$ increases, ....
+We observe that as $β$ increases, .... This is because, $β$ is an exploration-exploitation trade-off parameter: for $β$ ≥ 0, the bigger $β$ is, the more the robot tends to exploit the seemingly most effective choice; the lower $β$ is, the more the robot tends to explore the choices.
 
-For $β$ ≥ 0, the bigger $β$ is, the more the robot tends to exploit the seemingly most effective choice; the lower $β$ is, the more the robot tends to explore the choices.
-
+####  $γ$ Test
 
 Finally, we test the impact of the parameter $γ$ by comparing three different combanitions: 
 
