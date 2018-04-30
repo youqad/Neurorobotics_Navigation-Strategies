@@ -259,6 +259,16 @@ The boxplots of the trial duration and number of bump-into-wall are shown below:
 
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/4.png" alt="NumberofBumps vs. Alpha" style="width: 30%; margin-left: 20%;"/>
 
+
+The average is summarized in the chart below:
+
+| Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  | 
+| ------------------------------- | ------------------- | --------------------- |
+| $α = 0.4 (β = 8, γ = 0.9)$  | 56.03  | 3.40 | 
+| $α = 0.6 (β = 8, γ = 0.9)$  | 52.36  | 2.60  | 
+| $α = 0.8 (β = 8, γ = 0.9)$  | 58.01  | 1.97  | 
+
+
 We observe that as $α$ increases, the trial duration over the 30 trials is mores stable (as shown in the plot, the data stretch across a smaller range), and the number of bumps decreases. This is because $α$ is the learning rate, and the bigger $α$ is, the quicker the robot learns. In this case, with bigger $α$, the robot's learning depends more on previous trials, and thus make the trial duration over 30 trials more stable/concentrated. 
 
 Then, we test the impact of the parameter $β$ by comparing three different combanitions: 
@@ -273,6 +283,15 @@ The boxplots of the trial duration and number of bump-into-wall are shown below:
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/2.png" alt="TrialDuration vs. Beta" style="width: 30%; margin-left: 20%;"/>
 
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/5.png" alt="NumberofBumps vs. Beta" style="width: 30%; margin-left: 20%;"/>
+
+
+The average is summarized in the chart below:
+
+| Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  | 
+| ------------------------------- | ------------------- | --------------------- |
+| $β = 0.1 (α = 0.4, γ = 0.9)$  | 56.57  | 8.53  |
+| $β = 1 (α = 0.4, γ = 0.9)$  | 73.23  | 12.90  | 
+| $β = 8 (α = 0.4, γ = 0.9)$  | 56.03  | 3.40  | 
 
 
 We observe that as $β$ increases, ....
@@ -293,26 +312,17 @@ The boxplots of the trial duration and number of bump-into-wall are shown below:
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/6.png" alt="NumberofBumps vs. Gamma" style="width: 60%; margin-left: 20%;"/>
 
 
-We observe that as $γ$ increases, ....
-
-$γ$ determines a tradeoff between exploration (exploring farther states) and exploitation/greediness (exploiting the rewards of the nearby one). As it happens: the smaller the parameter γ, the more the robot tends to exploit the closest state associated with a (strictly) positive reward (even if there might be a state farther on which a given action leads to a bigger reward).
-
-The average of the trial time for those different parameter combinations is shown in the following chart:
+The average is summarized in the chart below:
 
 | Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  | 
 | ------------------------------- | ------------------- | --------------------- |
-| $α = 0.4 (β = 8, γ = 0.9)$  | 56.03  | 3.40 | 
-| $α = 0.6 (β = 8, γ = 0.9)$  | 52.36  | 2.60  | 
-| $α = 0.8 (β = 8, γ = 0.9)$  | 58.01  | 1.97  | 
-| $β = 0.1 (α = 0.4, γ = 0.9)$  | 56.57  | 8.53  |
-| $β = 1 (α = 0.4, γ = 0.9)$  | 73.23  | 12.90  | 
-| $β = 8 (α = 0.4, γ = 0.9)$  | 56.03  | 3.40  | 
 | $γ = 0.1 (α = 0.4, β = 8)$  | 145.91  | 9.8  | 
 | $γ = 0.5 (α = 0.4, β = 8)$  | 65.15  | 5.4  | 
 | $γ = 0.9 (α = 0.4, β = 8)$  | 56.07  | 3.4  | 	
 
 
-Remarks on the meaning of the parameters...
+We observed that $γ$ = $0.1$ leads to significant longer trial duration and higher number of bumps; $γ$ = $0.9$ result in a slightly longer trial duration and slightly higher number of bumps than $γ$ = $0.5$. This is because, $γ$ determines a tradeoff between exploration (i.e. exploring farther states) and exploitation/greediness (i.e. exploiting the rewards of the nearby one). Thus, the smaller the parameter $γ$, the more the robot tends to exploit the closest state associated with a (strictly) positive reward (even if there might be a state farther on which a given action leads to a bigger reward). Thus, $γ$ = $0.1$ could lead to very inefficient choices of the robot, $γ$ = $0.9$ might lead to some resource waste due to the exploration choice, and $γ$ = $0.5$ can provide a better balance between the exploration and the exploitation.
+
 
 (I inserted the gif here for future use, same order as in Gyazo)
 <img src="https://gyazo.com/b3ed317027c72fbd2d2052d22cb25384.gif" alt="1" style="width: 60%; margin-left: 20%;"/>
