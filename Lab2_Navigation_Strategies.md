@@ -117,6 +117,9 @@ Median of the trial duration: $56.28$ sec
 3rd quartile of the trial duration: $91.82$ sec
 ```
 
+
+We used these statistics as reference to compare with the statistics of other strategies. The analysis is stated in the first part of Section 4. 
+
 ## 3. You're about to implement a `qlearning` policy similar to the one used by Dollé et al. (2010): it uses a Q-learning algorithm to learn, trial after trial, which is the best strategy depending on the state of the surrounding world.
 
 - **Definition of the states**: in our case, states are defined as a 4-digits string. The first three ones indicate whether a wall has been detected at less than 35 distance units: respectively on the left, in front, and on the right of the robot. The 4th digit range from $0$ to $7$ and indicates in which region the radar has detected the goal ($0$ corresponds the front-left region, and it goes counter-clockwise). The current (resp. previous) state is available in the `S_t` (resp. `S_tm1`) variable.
@@ -250,7 +253,7 @@ We have run 50 trials with the parameters $α = 0.4, β = 8, γ = 0.9$. The stat
 | ------------- | ------------- | ------------- | ------------- |
 | 1 to 10  | $69.54$  | $54.63$  | $101.78$  |
 | 41 to 50  | $42.22$  | $35.38$  | $54.46$  |
-| All  | $47.26$  | $34.44$  | $67,99$  |
+| All  | $47.26$  | $34.44$  | $67.99$  |
 
 
 The table above indicates an improvment in the last 10 trials comparing with the first 10 trials. Specifically, the median decreased $39$% from $69.54$ sec (1 to 10 trails) to $42.22$ sec (41 to 50 trials), the 1st quartile decreased $35$% from $54.63$ sec to $35.38$ sec, and the 3rd quartile decreased 46% from $101.78$ sec to $54.46$ sec.
