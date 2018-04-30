@@ -246,7 +246,8 @@ elif gatingType=='qlearning':
 
 
 ### Compute the median and quartiles over the first ten trials and the last ten ones: is there an improvement?
-We have run 50 trials with the parameters $α = 0.4, β = 8, γ = 0.9$. The statistics of the trial duration over the first 10 trials, last 10 trials and all 50 trials are reported in the following chart:
+
+We have run $50$ trials with the parameters $α = 0.4, β = 8, γ = 0.9$. The median and quartiles of the trial durations over the first $10$ trials, last $10$ trials and all $50$ trials are (the time values are given in seconds):
 
 
 | Trials  | Median | 1st quartile  | 3rd quartile |
@@ -256,10 +257,14 @@ We have run 50 trials with the parameters $α = 0.4, β = 8, γ = 0.9$. The stat
 | All  | $47.26$  | $34.44$  | $67.99$  |
 
 
-The table above indicates an improvment in the last 10 trials comparing with the first 10 trials. Specifically, the median decreased $39$% from $69.54$ sec (1 to 10 trails) to $42.22$ sec (41 to 50 trials), the 1st quartile decreased $35$% from $54.63$ sec to $35.38$ sec, and the 3rd quartile decreased 46% from $101.78$ sec to $54.46$ sec.
+The table above shows an improvement thoughout the last 10 trials compared to the first 10 trials. More precisely:
+
+- the median decreased by $39$% by going from $69.54$ sec (during the first 10 trails) to $42.22$ sec (last 10 trials)
+- the 1st quartile decreased by $35$% by going from $54.63$ sec to $35.38$ sec
+- and the 3rd quartile decreased by $46$% by going from $101.78$ sec to $54.46$ sec.
 
 
-We have implenmented another 50 trials, though there was an increasement in the 1st quartile in the last 10 trials, the statistics shown below still indicated an improvement:
+We have run another 50-trial simulation: although there has been an increase of the 1st quartile by the last 10 trials, the statistics shown below still indicate an overall improvement:
 
 
 | Trials  | Median | 1st quartile  | 3rd quartile |
