@@ -273,6 +273,8 @@ We have run another 50-trial simulation: although there has been an increase of 
 | 41 to 50  | $64.03$  | $46.35$  | $70.29$  |
 | All  | $44.91$  | $37.01$  | $69.27$  |
 
+Comparing the statistics of all trials of `QLearning` strategy with those of `randomPersist` strategy (see Section 2), we observed that the trial duration of `QLearning` strategy is shorter than that of `randomPersist` strategy, demonstrating the higher efficiency of the new strategy.
+
 
 ### Do the number of bumps into a wall decrease?
 
