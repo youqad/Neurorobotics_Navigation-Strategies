@@ -114,7 +114,7 @@ def strategy_gating(nbCh,gatingType):
 
     # Q-learning related stuff
     # Algorithm parameters
-    alpha = 0.9
+    alpha = 0.4
     beta = 8
     gamma = 0.9
 
@@ -153,6 +153,7 @@ def strategy_gating(nbCh,gatingType):
       for i in range(nbCh+1):
           if cum_probas[i] < r <= cum_probas[i+1]:
               return i
+              
     two_times_in_a_row = 0
     # Main loop:
     while (not rospy.is_shutdown()) and (trial <nbTrials):

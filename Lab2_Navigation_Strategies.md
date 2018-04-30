@@ -151,7 +151,48 @@ You are asked to run the algorithm on a hybrid synchronous-asynchronous mode, th
 
 _________
 
-Similarly to what we did in *question 1*, we involved totalNbSteps and ts variables in the qlearning function. And according to the Q Learning formulas given in the handout, we define the Q value as:
+Similarly to what we did in *question 1*, we increment a `ts` (time step) variable not to exceed the `totalNbSteps` without making a new action choice.
+
+The following function allows us to draw an action accroding to the softmax policy:
+
+```python
+def draw_proba(Q, S, beta=beta):
+    # draw an action according according
+    # to the softmax policy
+    r = np.random.random()
+
+    Z = sum(np.exp(beta*Q[(S, a)]) for a in range(nbCh))
+
+    cum_probas = np.zeros(nbCh+1)
+    cum_probas[1:] = np.array([np.exp(beta*Q[(S, a)])/Z for a in range(nbCh)]).cumsum()
+
+    for i in range(nbCh+1):
+        if cum_probas[i] < r <= cum_probas[i+1]:
+            return i
+```
+
+So the two conditions under which a new action is made can be translated as:
+
+```python
+# maximum number of steps between two action choices
+totalNbSteps = 2*frequency
+
+if ts % totalNbSteps == 0 or S_t != S_tm1:
+  # updating the Q-function
+  Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
+
+  rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
+
+  if rew != 0:
+    # the non-zero reward has been taken into account when updating
+    # the Q-function, set it back to zero
+    rew = 0
+
+    # new choice according to the softmax policy
+    choice = draw_proba(Q, S_t)
+```
+
+And according to the Q Learning formulas given in the handout, we define the Q value as:
 
 ```python
 Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)]);
