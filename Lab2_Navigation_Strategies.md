@@ -192,83 +192,51 @@ if ts % totalNbSteps == 0 or S_t != S_tm1:
     choice = draw_proba(Q, S_t)
 ```
 
-And according to the Q Learning formulas given in the handout, we define the Q value as:
+and the only remaining case to handle when it comes to updating the Q-values is:
 
 ```python
-Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)]);
+elif rew != 0:
+    # updating the Q-function
+    Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
+    rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
 
-and we define action choice using softmax policy as:
-def draw_proba(Q, S, beta=beta):
-  # draw an action according according
-  # to the softmax policy
-  r = np.random.random()
-
-  Z = sum(np.exp(beta*Q[(S, a)]) for a in range(nbCh))
-
-  cum_probas = np.zeros(nbCh+1)
-  cum_probas[1:] = np.array([np.exp(beta*Q[(S, a)])/Z for a in range(nbCh)]).cumsum()
+    rew = 0
 ```
 
-Thus, the qlearning strategy is defined as the follows:
+
+On the whole, the `qlearning` navigation strategy is defined as follows:
 
 ```python
 elif gatingType=='qlearning':
-  # maximum number of steps between two action choices
-  totalNbSteps = 2*frequency
+    # maximum number of steps between two action choices
+    totalNbSteps = 2*frequency
 
-  if ts % totalNbSteps == 0 or S_t != S_tm1:
-    Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
-    rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
-    if rew != 0:
-rew = 0
-    choice = draw_proba(Q, S_t)
-  elif rew != 0:
-    Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
-    rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
-    rew = 0
+    if ts % totalNbSteps == 0 or S_t != S_tm1:
+        # updating the Q-function
+        Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
 
-  rospy.loginfo("Q-learning (time: "+str(int(rospy.get_time()-startT))+"): trial "+str(trial)+" / "+i2strat[choice])
-  speed_l=channel[choice].speed_left
-  speed_r=channel[choice].speed_right
-```
-Similar as in Q1, we involved totalNbSteps and ts variables in the qlearning function. And according to the Q Learning formulas given in the handout, we define the Q value as:
+        rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
 
-```python
-Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)]);
+        if rew != 0:
+        # the non-zero reward has been taken into account when updating
+        # the Q-function, set it back to zero
+        rew = 0
 
-and we define action choice using softmax policy as:
-def draw_proba(Q, S, beta=beta):
-  # draw an action according according
-  # to the softmax policy
-  r = np.random.random()
+        # new choice according to the softmax policy
+        choice = draw_proba(Q, S_t)
 
-  Z = sum(np.exp(beta*Q[(S, a)]) for a in range(nbCh))
+    elif rew != 0:
+        # updating the Q-function
+        Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
 
-  cum_probas = np.zeros(nbCh+1)
-  cum_probas[1:] = np.array([np.exp(beta*Q[(S, a)])/Z for a in range(nbCh)]).cumsum()
-```
+        rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
 
-Thus, the qlearning strategy is defined as the follows:
+        rew = 0
 
-```python
-elif gatingType=='qlearning':
-  # maximum number of steps between two action choices
-  totalNbSteps = 2*frequency
+    rospy.loginfo("Q-learning (time: "+str(int(rospy.get_time()-startT))+"): trial "+str(trial)+" / "+i2strat[choice])
 
-  if ts % totalNbSteps == 0 or S_t != S_tm1:
-    Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
-    rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
-    if rew != 0:
-rew = 0
-    choice = draw_proba(Q, S_t)
-  elif rew != 0:
-    Q[(S_tm1, choice)] += alpha*(rew+gamma*max(Q[(S_t, a)] for a in range(nbCh))-Q[(S_tm1, choice)])
-    rospy.loginfo(str((S_tm1, choice))+" -> "+str(Q[(S_tm1, choice)])+" / rew: "+str(rew))
-    rew = 0
-
-  rospy.loginfo("Q-learning (time: "+str(int(rospy.get_time()-startT))+"): trial "+str(trial)+" / "+i2strat[choice])
-  speed_l=channel[choice].speed_left
-  speed_r=channel[choice].speed_right
+    speed_l=channel[choice].speed_left
+    speed_r=channel[choice].speed_right
 ```
 
 ## 4. Finally, you'll try to quantitatively evaluate how this algorithm works by running it on $30$ trials for instance (the more trials the better).
