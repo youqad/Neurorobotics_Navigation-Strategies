@@ -294,17 +294,18 @@ In the other 50-trial simulation, similarly, the average bumps for the last 10 t
 ### Even if there doesn't seem to be any improvement (which is likely, with so few trials), store the Q-values at the end and check if the learning goes as expected: look up the Q-values of the `1110`, `1117`, `0000` and `0007` states: what do you observe?
 
 
-To obatain better accuracy, we implemented 100 trials with the default parameters for four more times. We have observed that:
+To get a better accuracy, we've run 100-trial simulations with the default parameters $α = 0.4, β = 8, γ = 0.9$ four more times. We can observe that:
 
-(1) For states `1110` and `1117`, as expected, when the goal is in front of the robot but is obstructed by the wall, the robot prefers the "wallFollower" strategy to bypass the wall and approach the goal.
-(2) However, for the states `0000` and `0007`in which the goal is directly in front of the robot without obstacle, we obtained results different to our expectation -- there is no obvious preference between "wallFollower" and "guidance" strategies and they even show a preference to the "wallFollower“ strategy somewhat which is not effective at all.
+1. For the states `1110` and `1117`, as expected, when the goal is in front of the robot but is obstructed by a wall, the robot favors the `wallFollower` strategy to bypass the wall and get closer to the goal.
+
+2. However, for the states `0000` and `0007` in which the goal is directly in front of the robot without any obstacle, we obtained results slightly different to what we might expect - there is no significant preference between the `wallFollower` and `guidance` strategies, and the robot even happen to show a preference to the `wallFollower` strategy sometimes, which is not effective.
 
 
-We think that the second observation stated above might result from the reward issues:
+We think that the second somewhat counter-intuitive observation stated above might result from a reward issue:
 
-(1) When the wall is in front of the robot but the robot has not detected the wall, if the robot uses "Guidance" strategy, it will bump into the wall receive penalty (reward = $-1$). This negative reward may be reinforced in the trails, and the robot has learned to not use "Guidance" strategy when the wall is not detected even it has already bypassed the wall.
+- When the wall is in not far from the robot but the robot has not detected the wall, if the robot uses the `guidance` strategy, it will bump into the wall and receive a penalty (reward = $-1$). This negative reward may be reinforced thoughout the trials, and the robot ends up learning to *distrust* the `guidance` strategy *too much*, so that it may happen that the robot doesn't use it when the wall is not detected, even it has already bypassed the wall.
 
-(2) Moreover, the rebot does not receive any reward by choosing "Guidance" strategy when thre is no wall in front of it, because most of the time, there is still a long way for the robot to go to reach the reward, thus it is not positively reinforced to do so.
+- Moreover, the rebot does not receive any reward by choosing "Guidance" strategy when thre is no wall in front of it, because most of the time, there is still a long way for the robot to go to reach the reward, thus it is not positively reinforced to do so.
 
 
 To solve this problem, we think we can modify the reward rules in these ways:
