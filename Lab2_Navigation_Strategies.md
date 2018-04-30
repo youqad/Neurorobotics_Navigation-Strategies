@@ -245,11 +245,15 @@ To solve this problem, we think we can modify the reward rules in these ways:
 
 
 ### If you have the time, repeat the experiment with other values of the $α, β$ and $γ$ parameters to see how the learning speed is impacted.
-First, we test the impact of the parameter $α$ by comparing three different combanitions: (1) $α = 0.4, β = 8, γ = 0.9$; (2) $α = 0.6, β = 8, γ = 0.9$; (3) $α = 0.8, β = 8, γ = 0.9$.
+First, we test the impact of the parameter $α$ by comparing three different combanitions: 
+
+(1) $α = 0.4, β = 8, γ = 0.9$; 
+(2) $α = 0.6, β = 8, γ = 0.9$; 
+(3) $α = 0.8, β = 8, γ = 0.9$.
 
 (1) Trial duration
 | $α$ | Median | 1st quartile  | 3rd quartile |
-| ------------- | ------------- | ------------- | ------------- | ------------- |
+| ------------- | ------------- | ------------- | ------------- |
 | 0.4  | 69.54  | 54.63  | 101.78  |
 | 0.6  | 42.22  | 35.38  | 54.46  |
 | 0.8  | 47.26  | 34.44  | 67,99  |
@@ -279,7 +283,12 @@ $γ$
 $α = 0.4, β = 8, γ = 0.1$
 $α = 0.4, β = 8, γ = 0.5$
 $α = 0.4, β = 8, γ = 0.9$
-
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/1.png" alt="TrialDuration vs. Alpha" style="width: 60%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/2.png" alt="TrialDuration vs. Beta" style="width: 60%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/3.png" alt="TrialDuration vs. Gamma" style="width: 60%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/4.png" alt="NumberofBumps vs. Alpha" style="width: 60%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/5.png" alt="NumberofBumps vs. Beta" style="width: 60%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/6.png" alt="NumberofBumps vs. Gamma" style="width: 60%; margin-left: 20%;"/>
 
 (I inserted the gif here for future use, same order as in Gyazo)
 <img src="https://gyazo.com/b3ed317027c72fbd2d2052d22cb25384.gif" alt="1" style="width: 60%; margin-left: 20%;"/>
