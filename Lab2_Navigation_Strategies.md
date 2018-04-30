@@ -118,7 +118,7 @@ Median of the trial duration: $56.28$ sec
 ```
 
 
-We used these statistics as reference to compare with the statistics of other strategies. The analysis is stated in the first part of Section 4. 
+We used these statistics as reference to compare with the statistics of other strategies. The analysis is stated in the first part of Section 4.
 
 ## 3. You're about to implement a `qlearning` policy similar to the one used by Dollé et al. (2010): it uses a Q-learning algorithm to learn, trial after trial, which is the best strategy depending on the state of the surrounding world.
 
@@ -278,7 +278,7 @@ Comparing the statistics of all trials of `QLearning` strategy with those of `ra
 
 ### Do the number of bumps into a wall decrease?
 
-The number of bumps into the wall decreased in the last 10 trials comparing with the first 10 trials. The average number of bumps in the first 10 trials is $4.2$, and in the last 10 trials becomes $0.4$. The statistics of the number of bumps are shown as below:
+The number of bumps into the wall decrease by the last 10 trials compared to the first 10 trials. The average number of bumps in the first 10 trials is $4.2$, and in the last 10 trials it becomes $0.4$. The median and quartiles of the number of bumps are shown below:
 
 
 | Trials  | Average | Median | 1st quartile  | 3rd quartile |
@@ -288,7 +288,7 @@ The number of bumps into the wall decreased in the last 10 trials comparing with
 | All  | $2.36$  | $0$  | $0$  | $2.75$  |
 
 
-In our another 50 trials, similarly, the average bumps of the last 10 trials is $0.5$, much lower than the that of the first 10 trials which is $5.4$.
+In the other 50-trial simulation, similarly, the average bumps for the last 10 trials is $0.5$, much lower than the one of the first 10 trials which is $5.4$.
 
 
 ### Even if there doesn't seem to be any improvement (which is likely, with so few trials), store the Q-values at the end and check if the learning goes as expected: look up the Q-values of the `1110`, `1117`, `0000` and `0007` states: what do you observe?
