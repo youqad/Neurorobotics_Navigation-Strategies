@@ -112,9 +112,9 @@ import csv
 After running $10$ trials with the `randomPersist` strategy, we obtain the following results:
 
 ```
-Median of the trial duration:
-1st quartile of the trial duration:
-3rd quartile of the trial duration:
+Median of the trial duration: $56.28$ sec
+1st quartile of the trial duration: $36.76$ sec
+3rd quartile of the trial duration: $91.82$ sec
 ```
 
 ## 3. You're about to implement a `qlearning` policy similar to the one used by Dollé et al. (2010): it uses a Q-learning algorithm to learn, trial after trial, which is the best strategy depending on the state of the surrounding world.
