@@ -331,10 +331,10 @@ First, we test the impact of the parameter $α$ by comparing three different com
 
 The boxplots of the trial duration and number of bump-into-wall are shown below:
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/1.png?raw=true" alt="TrialDuration vs. Alpha" style="width: 30%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/1.png?raw=true" alt="TrialDuration vs. Alpha" style="margin-left: 7%;"/>
 
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/4.png?raw=true" alt="NumberofBumps vs. Alpha" style="width: 30%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/4.png?raw=true" alt="NumberofBumps vs. Alpha" style="margin-left: 7%;"/>
 
 
 The average is summarized in the table below (the times are in seconds):
@@ -361,10 +361,10 @@ Then, we test the impact of the parameter $β$ by comparing three different comb
 The boxplots of the trial duration and number of bump-into-wall are shown below:
 
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/2.png?raw=true" alt="TrialDuration vs. Beta" style="width: 30%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/2.png?raw=true" alt="TrialDuration vs. Beta" style="margin-left: 7%;"/>
 
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/5.png?raw=true" alt="NumberofBumps vs. Beta" style="width: 30%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/5.png?raw=true" alt="NumberofBumps vs. Beta" style="margin-left: 7%;"/>
 
 
 The averages are summarized in the table below:
@@ -389,9 +389,9 @@ Finally, we test the impact of the parameter $γ$ by comparing three different c
 
 The boxplots of the trial duration and number of bump-into-wall are shown below:
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/3.png?raw=true" alt="TrialDuration vs. Gamma" style="width: 30%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/3.png?raw=true" alt="TrialDuration vs. Gamma" style="margin-left: 7%;"/>
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/6.png?raw=true" alt="NumberofBumps vs. Gamma" style="width: 30%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/6.png?raw=true" alt="NumberofBumps vs. Gamma" style="margin-left: 7%;"/>
 
 
 The average is summarized in the table below (times in seconds):
@@ -410,31 +410,31 @@ Here are some gifs from various qlearning simulations with the parameters $α = 
 
 [At trial 1](https://gyazo.com/1396f632e3799e692d9f5ee07ed4d164.gif)
 
-<img src="https://gyazo.com/1396f632e3799e692d9f5ee07ed4d164.gif" alt="5" style="width: 60%; margin-left: 20%;"/>
+<img src="https://gyazo.com/1396f632e3799e692d9f5ee07ed4d164.gif" alt="5" style="margin-left: 7%;"/>
 
 _________
 
 [At trial 96](https://gyazo.com/96d5c023e4d6bfe45c14fae02a94f3f6.gif)
 
-<img src="https://gyazo.com/96d5c023e4d6bfe45c14fae02a94f3f6.gif" alt="2" style="width: 60%; margin-left: 20%;"/>
+<img src="https://gyazo.com/96d5c023e4d6bfe45c14fae02a94f3f6.gif" alt="2" style="margin-left: 7%;"/>
 
 _________
 
 [At trial 101](https://gyazo.com/53fed15dd462cce1405ce43f00541db3.gif)
 
-<img src="https://gyazo.com/53fed15dd462cce1405ce43f00541db3.gif" alt="4" style="width: 60%; margin-left: 20%;"/>
+<img src="https://gyazo.com/53fed15dd462cce1405ce43f00541db3.gif" alt="4" style="margin-left: 7%;"/>
 
 _________
 
 
 [At trial 106](https://gyazo.com/b3ed317027c72fbd2d2052d22cb25384.gif)
 
-<img src="https://gyazo.com/b3ed317027c72fbd2d2052d22cb25384.gif" alt="1" style="width: 60%; margin-left: 20%;"/>
+<img src="https://gyazo.com/b3ed317027c72fbd2d2052d22cb25384.gif" alt="1" style="margin-left: 7%;"/>
 
 _________
 
 [At trial 107](https://gyazo.com/656bbbc108adad287280847734f0b098.gif)
 
-<img src="https://gyazo.com/656bbbc108adad287280847734f0b098.gif" alt="3" style="width: 60%; margin-left: 20%;"/>
+<img src="https://gyazo.com/656bbbc108adad287280847734f0b098.gif" alt="3" style="margin-left: 7%;"/>
 
 _________
