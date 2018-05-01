@@ -1,8 +1,8 @@
 ---
 title: "Tutorial 2: Navigation Strategies"
 author:
-- 'Younesse Kaddar'
 - 'Kexin Ren'
+- 'Younesse Kaddar'
 date: 2018-04-28
 tags:
   - lab
@@ -242,6 +242,50 @@ elif gatingType=='qlearning':
     speed_r=channel[choice].speed_right
 ```
 
+And then we store the relevant data in `csv` files:
+
+```python
+# Saving (Trial, Duration, Nb of bumps, Median, Quartiles) in a log file
+data = [['Trial', 'Duration', 'Number of bumps into walls']]
+
+data.extend([[x for x in L if x is not None] for L\
+ in izip_longest(range(1, nbTrials+1), trialDuration, bumps_list)])
+
+with open('/home/viki/catkin_ws/src/navigation_strategies/'+(str(int(startT))[3:])+'_Trials_'+\
+  gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
+  csv.writer(f).writerows(data)
+
+# Saving Median and Quartiles in a log file
+data_stat = [['Trials','Median', '1st Quartile', '3rd Quartile'],\
+['All', med, fst_quartile, thrd_quartile]]
+
+if nbTrials > 10:
+    med, fst_quartile, thrd_quartile = med_quartiles(trialDuration[:10])
+    data_stat.append(['1 to 10', med, fst_quartile, thrd_quartile])
+
+    med, fst_quartile, thrd_quartile = med_quartiles(trialDuration[-10:])
+    data_stat.append([str(nbTrials-9)+' to '+str(nbTrials), med, fst_quartile, thrd_quartile])
+
+with open('/home/viki/catkin_ws/src/navigation_strategies/'+(str(int(startT))[3:])+'_Stats_'+\
+gatingType+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
+    csv.writer(f).writerows(data_stat)
+
+if gatingType=='qlearning':
+    # Storing the Q-values at the end
+    keys = list(OrderedDict.fromkeys(['1110', '1117', '0000', '0007']+[state for state, _ in Q.keys() if state]))
+
+    rospy.loginfo('States: '+repr(keys)+'\n')
+
+
+    with open('/home/viki/catkin_ws/src/navigation_strategies/'+(str(int(startT))[3:])+'_Q-values_'+\
+    'nbTrials_'+str(nbTrials)+'_a_'+str(alpha)+'_b_'+str(beta)+'_g_'+str(gamma)+'.csv','w') as f:
+        csv.writer(f).writerow(["State", "Wall follower", "Guidance"])
+
+    for key in keys:
+        csv.writer(f).writerow([key]+ [Q[(key, i)] for i in range(nbCh)])
+```
+
+
 ## 4. Finally, you'll try to quantitatively evaluate how this algorithm works by running it on $30$ trials for instance (the more trials the better).
 
 
@@ -377,7 +421,7 @@ The averages are summarized in the table below:
 | $β = 8 \quad (α = 0.4, γ = 0.9)$  | $56.03$  | $3.40$  |
 
 
-Theoretically, $β$ is an exploration-exploitation trade-off parameter: for $β$ ≥ 0, the bigger $β$ is, the more the robot tends to exploit the strategy that the robot deems to be the best one according to its estimations; with small $β$, the robot do not choose necessarily the strategy that is deemed to be the best so far. However, we did not see the effect of the $β$ parameter in the simulations because of the fact that whenever $β$ is little and the robot tries to explore strategies irrespective of their Q-values (the robot's internal estimate of values of the strategies), it is negatively reinforced if it bumps into a wall for instance: so around the walls, the Q-value of the `wallFollower`  gets better and better compared to the one of the `Guidance` strategy, and however little $β$ is, it is not enough to compensate the gap between two Q-values: the robot ends up choosing greedily again.
+Theoretically, $β$ is an exploration-exploitation trade-off parameter: for $β$ ≥ 0, the bigger $β$ is, the more the robot tends to exploit the strategy that the robot deems to be the best one according to its estimations; with small $β$, the robot do not choose necessarily the strategy that is deemed to be the best so far. However, we did not see the effect of the $β$ parameter in the simulations because of the fact that whenever $β$ is little and the robot tries to explore strategies irrespective of their Q-values (the robot's internal estimate of values of the strategies), it is negatively reinforced if it bumps into a wall for instance: so around the walls, the Q-value of the `wallFollower`  gets better and better compared to the one of the `guidance` strategy, and however little $β$ is, it is not enough to compensate the gap between the two Q-values: the robot ends up choosing greedily again.
 
 
 ####  $γ$ Test
