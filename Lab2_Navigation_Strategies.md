@@ -381,7 +381,7 @@ We observe that as $β$ increases, .... This is because, $β$ is an exploration-
 
 ####  $γ$ Test
 
-Finally, we test the impact of the parameter $γ$ by comparing three different combanitions:
+Finally, we test the impact of the parameter $γ$ by comparing three different combinations:
 
 (1) $α = 0.4, β = 8, γ = 0.1$;
 (2) $α = 0.4, β = 8, γ = 0.5$;
@@ -394,21 +394,47 @@ The boxplots of the trial duration and number of bump-into-wall are shown below:
 <img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/6.png?raw=true" alt="NumberofBumps vs. Gamma" style="width: 30%; margin-left: 20%;"/>
 
 
-The average is summarized in the chart below:
+The average is summarized in the table below (times in seconds):
 
 | Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  |
 | ------------------------------- | ------------------- | --------------------- |
-| $γ = 0.1 (α = 0.4, β = 8)$  | $145.91$  | $9.8$  |
-| $γ = 0.5 (α = 0.4, β = 8)$  | $65.15$  | $5.4$  |
-| $γ = 0.9 (α = 0.4, β = 8)$  | $56.07$  | $3.4$  | 	
+| $γ = 0.1 \quad (α = 0.4, β = 8)$  | $145.91$  | $9.8$  |
+| $γ = 0.5 \quad (α = 0.4, β = 8)$  | $65.15$  | $5.4$  |
+| $γ = 0.9 \quad (α = 0.4, β = 8)$  | $56.07$  | $3.4$  | 	
 
 
-We observed that $γ$ = $0.1$ leads to significant longer trial duration and higher number of bumps; $γ$ = $0.9$ result in a slightly longer trial duration and slightly higher number of bumps than $γ$ = $0.5$. This is because, $γ$ determines a tradeoff between exploration (i.e. exploring farther states) and exploitation/greediness (i.e. exploiting the rewards of the nearby one). Thus, the smaller the parameter $γ$, the more the robot tends to exploit the closest state associated with a (strictly) positive reward (even if there might be a state farther on which a given action leads to a bigger reward). Thus, $γ$ = $0.1$ could lead to very inefficient choices of the robot, $γ$ = $0.9$ might lead to some resource waste due to the exploration choice, and $γ$ = $0.5$ can provide a better balance between the exploration and the exploitation.
+We observe that $γ$ = $0.1$ leads to significantly longer trial duration and higher number of bumps; $γ = 0.9$ results in a slightly longer trial duration and slightly higher number of bumps than $γ = 0.5$. This is because, $γ$ determines a tradeoff between **state exploration** (i.e. exploring farther states) and **state exploitation**/greediness (i.e. don't really considering farther much in the estimation of the current Q-value) when evaluating the Q-values of a pair of state and action. Thus, the smaller the parameter $γ$, the less the robot takes into account farther state in the Q-value of a state-action pair, which leads to the robot tending to exploit the closest state associated with a (strictly) positive reward (even if there might be a state farther on which a given action leads to a bigger reward). Thus, $γ = 0.1$ could lead to very inefficient choices of the robot, $γ = 0.9$ might lead to some resource waste due to the exploration choice, and $γ = 0.5$ can provide a good balance between the state exploration and the state exploitation.
 
 
-(I inserted the gif here for future use, same order as in Gyazo)
-<img src="https://gyazo.com/b3ed317027c72fbd2d2052d22cb25384.gif" alt="1" style="width: 60%; margin-left: 20%;"/>
-<img src="https://gyazo.com/96d5c023e4d6bfe45c14fae02a94f3f6.gif" alt="2" style="width: 60%; margin-left: 20%;"/>
-<img src="https://gyazo.com/656bbbc108adad287280847734f0b098.gif" alt="3" style="width: 60%; margin-left: 20%;"/>
-<img src="https://gyazo.com/53fed15dd462cce1405ce43f00541db3.gif" alt="4" style="width: 60%; margin-left: 20%;"/>
+Here are some gifs from various qlearning simulations with the parameters $α = 0.4, β = 8, γ = 0.1$:
+
+[At trial 1](https://gyazo.com/1396f632e3799e692d9f5ee07ed4d164.gif)
+
 <img src="https://gyazo.com/1396f632e3799e692d9f5ee07ed4d164.gif" alt="5" style="width: 60%; margin-left: 20%;"/>
+
+_________
+
+[At trial 96](https://gyazo.com/96d5c023e4d6bfe45c14fae02a94f3f6.gif)
+
+<img src="https://gyazo.com/96d5c023e4d6bfe45c14fae02a94f3f6.gif" alt="2" style="width: 60%; margin-left: 20%;"/>
+
+_________
+
+[At trial 101](https://gyazo.com/53fed15dd462cce1405ce43f00541db3.gif)
+
+<img src="https://gyazo.com/53fed15dd462cce1405ce43f00541db3.gif" alt="4" style="width: 60%; margin-left: 20%;"/>
+
+_________
+
+
+[At trial 106](https://gyazo.com/b3ed317027c72fbd2d2052d22cb25384.gif)
+
+<img src="https://gyazo.com/b3ed317027c72fbd2d2052d22cb25384.gif" alt="1" style="width: 60%; margin-left: 20%;"/>
+
+_________
+
+[At trial 107](https://gyazo.com/656bbbc108adad287280847734f0b098.gif)
+
+<img src="https://gyazo.com/656bbbc108adad287280847734f0b098.gif" alt="3" style="width: 60%; margin-left: 20%;"/>
+
+_________
