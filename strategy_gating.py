@@ -128,7 +128,7 @@ def strategy_gating(nbCh,gatingType):
     rospy.loginfo("Start time: "+str(startT))
     
     trial = 0
-    nbTrials = 10
+    nbTrials = 30
     trialDuration = np.zeros((nbTrials))
 
     choice = -1
