@@ -303,16 +303,16 @@ To get a better accuracy, we've run 100-trial simulations with the default param
 
 We think that the second somewhat counter-intuitive observation stated above might result from a reward issue:
 
-- When the wall is in not far from the robot but the robot has not detected the wall, if the robot uses the `guidance` strategy, it will bump into the wall and receive a penalty (reward = $-1$). This negative reward may be reinforced thoughout the trials, and the robot ends up learning to *distrust* the `guidance` strategy *too much*, so that it may happen that the robot doesn't use it when the wall is not detected, even it has already bypassed the wall.
+- When the wall is in not far from the robot but the robot has not detected the wall, if the robot uses the `guidance` strategy, it will bump into the wall and receive a penalty (reward = $-1$). This negative reward may be reinforced thoughout the trials, and the robot ends up learning to *distrust* the `guidance` strategy *too much*, so that it may happen that the robot doesn't use it when the wall is not detected, even if it has already bypassed the wall.
 
-- Moreover, the rebot does not receive any reward by choosing "Guidance" strategy when thre is no wall in front of it, because most of the time, there is still a long way for the robot to go to reach the reward, thus it is not positively reinforced to do so.
+- Moreover, the robot does not receive any immediate reward by choosing the `guidance` strategy when thre is no wall in front of it, because most of the time, there is still a long way for the robot to go to reach the reward, thus it is not sufficiently positively reinforced to do so.
 
 
-To solve this problem, we think we can modify the reward rules in these ways:
+To solve this problem, we think we can modify the reward rules in this way:
 
-(1) A very effective improvement would be to correlated the rewards with distance between the robot and the goal. For example, the closer the robot is to the goal, the bigger the reward. Or if the robot get closer to the goal, it gets a positive reward; if it bumps into the wall, it gets a negative reward; if it is following the wall, it gets neither reward nor penalties. for instance)
+1. A very effective improvement would be to correlate the rewards with the distance between the robot and the goal: the closer the robot is to the goal, the bigger the reward. As a result: if the robot gets closer to the goal, it gets a bigger and bigger reward; if it bumps into the wall, it gets a negative reward.
 
-(2) Another less effective way would be to make the reward bigger instead of saying that the trial ends when the robot's distance to the reward is less than $30$, we could broaden the radius and specify $50$ for instance.
+2. Another less effective way would be to make the reward bigger instead of saying that the trial ends when the robot's distance to the reward is less than $30$, we could broaden the radius and specify $50$ for instance.
 
 
 ### If you have the time, repeat the experiment with other values of the $α, β$ and $γ$ parameters to see how the learning speed is impacted.
@@ -322,7 +322,7 @@ We have repeated the experiments using three different values for each parameter
 
 ####  $α$ Test
 
-First, we test the impact of the parameter $α$ by comparing three different combanitions:
+First, we test the impact of the parameter $α$ by comparing three different combinations:
 
 (1) $α = 0.4, β = 8, γ = 0.9$;
 (2) $α = 0.6, β = 8, γ = 0.9$;
@@ -331,28 +331,27 @@ First, we test the impact of the parameter $α$ by comparing three different com
 
 The boxplots of the trial duration and number of bump-into-wall are shown below:
 
-
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/1.png" alt="TrialDuration vs. Alpha" style="width: 30%; margin-left: 20%;"/>
-
-
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/4.png" alt="NumberofBumps vs. Alpha" style="width: 30%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/1.png?raw=true" alt="TrialDuration vs. Alpha" style="width: 30%; margin-left: 20%;"/>
 
 
-The average is summarized in the chart below:
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/4.png?raw=true" alt="NumberofBumps vs. Alpha" style="width: 30%; margin-left: 20%;"/>
+
+
+The average is summarized in the table below (the times are in seconds):
 
 
 | Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  |
 | ------------------------------- | ------------------- | --------------------- |
-| $α = 0.4 (β = 8, γ = 0.9)$  | $56.03$  | $3.40$ |
-| $α = 0.6 (β = 8, γ = 0.9)$  | $52.36$  | $2.60$  |
-| $α = 0.8 (β = 8, γ = 0.9)$  | $58.01$  | $1.97$  |
+| $α = 0.4 \quad (β = 8, γ = 0.9)$  | $56.03$  | $3.40$ |
+| $α = 0.6 \quad (β = 8, γ = 0.9)$  | $52.36$  | $2.60$  |
+| $α = 0.8 \quad (β = 8, γ = 0.9)$  | $58.01$  | $1.97$  |
 
 
-We observe that as $α$ increases, the trial duration over the 30 trials is mores stable (as shown in the plot, the data stretch across a smaller range), and the number of bumps decreases. This is because $α$ is the learning rate, and the bigger $α$ is, the quicker the robot learns. In this case, with bigger $α$, the robot's learning depends more on previous trials, and thus make the trial duration over 30 trials more stable/concentrated.
+We observe that as $α$ increases, the trial duration over the 30 trials is more stable (as shown in the plot, the data stretch across a smaller range), and the number of bumps decreases. This is because $α$ is the learning rate, and the bigger $α$ is, the quicker the robot learns. In this case, with bigger $α$, the moren the robot's learning depends on previous trials, and thus make the trial duration over 30 trials more stable/concentrated.
 
 ####  $β$ Test
 
-Then, we test the impact of the parameter $β$ by comparing three different combanitions:
+Then, we test the impact of the parameter $β$ by comparing three different combinations:
 
 (1) $α = 0.4, β = 0.1, γ = 0.9$;
 (2) $α = 0.4, β = 1, γ = 0.9$;
@@ -362,20 +361,20 @@ Then, we test the impact of the parameter $β$ by comparing three different comb
 The boxplots of the trial duration and number of bump-into-wall are shown below:
 
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/2.png" alt="TrialDuration vs. Beta" style="width: 30%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/2.png?raw=true" alt="TrialDuration vs. Beta" style="width: 30%; margin-left: 20%;"/>
 
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/5.png" alt="NumberofBumps vs. Beta" style="width: 30%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/5.png?raw=true" alt="NumberofBumps vs. Beta" style="width: 30%; margin-left: 20%;"/>
 
 
-The average is summarized in the chart below:
+The averages are summarized in the table below:
 
 
 | Parameter Combination  | Ave. Trial Duration | Ave. Number of Bumps  |
 | ------------------------------- | ------------------- | --------------------- |
-| $β = 0.1 (α = 0.4, γ = 0.9)$  | $56.57$  | $8.53$  |
-| $β = 1 (α = 0.4, γ = 0.9)$  | $73.23$  | $12.90$  |
-| $β = 8 (α = 0.4, γ = 0.9)$  | $56.03$  | $3.40$  |
+| $β = 0.1 \quad (α = 0.4, γ = 0.9)$  | $56.57$  | $8.53$  |
+| $β = 1 \quad (α = 0.4, γ = 0.9)$  | $73.23$  | $12.90$  |
+| $β = 8 \quad (α = 0.4, γ = 0.9)$  | $56.03$  | $3.40$  |
 
 
 We observe that as $β$ increases, .... This is because, $β$ is an exploration-exploitation trade-off parameter: for $β$ ≥ 0, the bigger $β$ is, the more the robot tends to exploit the seemingly most effective choice; the lower $β$ is, the more the robot tends to explore the choices.
@@ -390,9 +389,9 @@ Finally, we test the impact of the parameter $γ$ by comparing three different c
 
 The boxplots of the trial duration and number of bump-into-wall are shown below:
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/3.png" alt="TrialDuration vs. Gamma" style="width: 30%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/3.png?raw=true" alt="TrialDuration vs. Gamma" style="width: 30%; margin-left: 20%;"/>
 
-<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/6.png" alt="NumberofBumps vs. Gamma" style="width: 30%; margin-left: 20%;"/>
+<img src="https://github.com/youqad/Neurorobotics_Navigation-Strategies/blob/master/6.png?raw=true" alt="NumberofBumps vs. Gamma" style="width: 30%; margin-left: 20%;"/>
 
 
 The average is summarized in the chart below:
