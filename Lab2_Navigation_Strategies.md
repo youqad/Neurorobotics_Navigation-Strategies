@@ -4,6 +4,7 @@ author:
 - 'Kexin Ren'
 - 'Younesse Kaddar'
 date: 2018-04-28
+toc: true
 tags:
   - lab
   - tutorial
